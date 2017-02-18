@@ -6,14 +6,16 @@ use pandoc_types::definition::*;
 
 fn main() {
     let mut meta = Meta::null();
-    meta.0.insert("title".to_string(), MetaValue::MetaInlines(vec![Inline::Str("a".to_string())]));
+    meta.0.insert("title".to_owned(), MetaValue::MetaInlines { c: vec![Inline::Str { c: "a".to_owned() }] });
 
-    let doc = Pandoc(
+    let doc = Pandoc::new(
         meta,
-        vec![Block::Header(1,
-                           Attr("a".to_string(), vec![], vec![]),
-                           vec![Inline::Str("a".to_string())]),
-             Block::Para(vec![Inline::Str("b".to_string())])]);
+        vec![
+            Block::Header { c: (
+                1,
+                Attr("a".to_owned(), vec![], vec![]),
+                vec![Inline::Str { c: "a".to_owned() }]) },
+            Block::Para { c: vec![Inline::Str { c: "b".to_owned() }] }]);
 
     let s = serde_json::to_string(&doc).unwrap();
     println!("serialized = {}", s);
