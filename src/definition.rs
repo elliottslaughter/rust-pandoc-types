@@ -1,22 +1,39 @@
 use std::collections::HashMap;
 
+use serde::{Serialize, Serializer, Deserialize, Deserializer};
+use serde::ser::SerializeStruct;
+
 const PANDOC_API_VERSION: &'static [i32] = &[1, 17, 0, 5];
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Pandoc {
-    pub meta: Meta,
-    pub blocks: Vec<Block>,
-    #[serde(rename = "pandoc-api-version")]
-    version: Vec<i32>,
+#[derive(Debug, Clone, PartialEq)]
+pub struct Pandoc(pub Meta, pub Vec<Block>);
+
+impl Serialize for Pandoc {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+        let mut value = serializer.serialize_struct("Pandoc", 3)?;
+        value.serialize_field("pandoc-api-version", PANDOC_API_VERSION)?;
+        value.serialize_field("meta", &self.0)?;
+        value.serialize_field("blocks", &self.1)?;
+        value.end()
+    }
 }
 
-impl Pandoc {
-    pub fn new(meta: Meta, blocks: Vec<Block>) -> Pandoc {
-        Pandoc {
-            meta: meta,
-            blocks: blocks,
-            version: PANDOC_API_VERSION.to_owned()
+impl Deserialize for Pandoc {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer {
+        #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+        #[serde(rename = "Pandoc")]
+        struct Inner {
+            meta: Meta,
+            blocks: Vec<Block>,
+            #[serde(rename = "pandoc-api-version")]
+            version: Vec<i32>,
         }
+
+        let value = Inner::deserialize(deserializer)?;
+        // FIXME: Should check this, but need a better error.
+        assert!(value.version[0] == PANDOC_API_VERSION[0] &&
+                value.version[1] == PANDOC_API_VERSION[1]);
+        Ok(Pandoc(value.meta, value.blocks))
     }
 }
 
@@ -38,60 +55,61 @@ impl Meta {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "t")]
+#[serde(tag = "t", content = "c")]
 pub enum MetaValue {
-    MetaMap { c: HashMap<String, MetaValue> },
-    MetaList { c: Vec<MetaValue> },
-    MetaBool { c: bool },
-    MetaString { c: String },
-    MetaInlines { c: Vec<Inline> },
-    MetaBlocks { c: Vec<Block> },
+    MetaMap(HashMap<String, MetaValue>),
+    MetaList(Vec<MetaValue>),
+    MetaBool(bool),
+    MetaString(String),
+    MetaInlines(Vec<Inline>),
+    MetaBlocks(Vec<Block>),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "t")]
+#[serde(tag = "t", content = "c")]
 pub enum Block {
-    Plain { c: Vec<Inline> },
-    Para { c: Vec<Inline> },
-    LineBlock { c: Vec<Vec<Inline>> },
-    CodeBlock { c: (Attr, String) },
-    RawBlock { c: (Format, String) },
-    BlockQuote { c: Vec<Block> },
-    OrderedList { c: (ListAttributes, Vec<Vec<Block>>) },
-    BulletList { c: Vec<Vec<Block>> },
-    DefinitionList { c: Vec<(Vec<Inline>, Vec<Vec<Block>>)> },
-    Header { c: (i32, Attr, Vec<Inline>) },
+    Plain(Vec<Inline>),
+    Para(Vec<Inline>),
+    LineBlock(Vec<Vec<Inline>>),
+    CodeBlock(Attr, String),
+    RawBlock(Format, String),
+    BlockQuote(Vec<Block>),
+    OrderedList(ListAttributes, Vec<Vec<Block>>),
+    BulletList(Vec<Vec<Block>>),
+    DefinitionList(Vec<(Vec<Inline>, Vec<Vec<Block>>)>),
+    Header(i32, Attr, Vec<Inline>),
     HorizontalRule,
-    Table { c: (Vec<Inline>, Vec<Alignment>, Vec<f64>, Vec<TableCell>, Vec<Vec<TableCell>>) },
-    Div { c: (Attr, Vec<Block>) },
+    Table(Vec<Inline>, Vec<Alignment>, Vec<f64>, Vec<TableCell>, Vec<Vec<TableCell>>),
+    Div(Attr, Vec<Block>),
     Null,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "t")]
+#[serde(tag = "t", content = "c")]
 pub enum Inline {
-    Str { c: String },
-    Emph { c: Vec<Inline> },
-    Strong { c: Vec<Inline> },
-    Strikeout { c: Vec<Inline> },
-    Superscript { c: Vec<Inline> },
-    Subscript { c: Vec<Inline> },
-    SmallCaps { c: Vec<Inline> },
-    Quoted { c: (QuoteType, Vec<Inline>) },
-    Cite { c: (Vec<Citation>, Vec<Inline>) },
+    Str(String),
+    Emph(Vec<Inline>),
+    Strong(Vec<Inline>),
+    Strikeout(Vec<Inline>),
+    Superscript(Vec<Inline>),
+    Subscript(Vec<Inline>),
+    SmallCaps(Vec<Inline>),
+    Quoted(QuoteType, Vec<Inline>),
+    Cite(Vec<Citation>, Vec<Inline>),
+    Code(Attr, String),
     Space,
     SoftBreak,
     LineBreak,
-    Math { c: (MathType, String) },
-    RawInline { c: (Format, String) },
-    Link { c: (Attr, Vec<Inline>, Target) },
-    Image { c: (Attr, Vec<Inline>, Target) },
-    Note { c: Vec<Block> },
-    Span { c: (Attr, Vec<Inline>) },
+    Math(MathType, String),
+    RawInline(Format, String),
+    Link(Attr, Vec<Inline>, Target),
+    Image(Attr, Vec<Inline>, Target),
+    Note(Vec<Block>),
+    Span(Attr, Vec<Inline>),
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "t")]
+#[serde(tag = "t", content = "c")]
 pub enum Alignment {
     AlignLeft,
     AlignRight,
@@ -103,7 +121,7 @@ pub enum Alignment {
 pub struct ListAttributes(pub i32, pub ListNumberStyle, pub ListNumberDelim);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "t")]
+#[serde(tag = "t", content = "c")]
 pub enum ListNumberStyle {
     DefaultStyle,
     Example,
@@ -115,7 +133,7 @@ pub enum ListNumberStyle {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(tag = "t")]
+#[serde(tag = "t", content = "c")]
 pub enum ListNumberDelim {
     DefaultDelim,
     Period,
@@ -139,6 +157,7 @@ impl Attr {
 pub struct TableCell(pub Vec<Block>);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "t", content = "c")]
 pub enum QuoteType {
     SingleQuote,
     DoubleQuote,
@@ -148,6 +167,7 @@ pub enum QuoteType {
 pub struct Target(pub String, pub String);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "t", content = "c")]
 pub enum MathType {
     DisplayMath,
     InlineMath,
@@ -155,15 +175,22 @@ pub enum MathType {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Citation {
+    #[serde(rename = "citationId")]
     pub citation_id: String,
+    #[serde(rename = "citationPrefix")]
     pub citation_prefix: Vec<Inline>,
+    #[serde(rename = "citationSuffix")]
     pub citation_suffix: Vec<Inline>,
+    #[serde(rename = "citationMode")]
     pub citation_mode: CitationMode,
+    #[serde(rename = "citationNoteNum")]
     pub citation_note_num: i32,
+    #[serde(rename = "citationHash")]
     pub citation_hash: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "t", content = "c")]
 pub enum CitationMode {
     AuthorInText,
     SuppressAuthor,

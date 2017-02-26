@@ -1,3 +1,10 @@
+//! This test checks that the JSON we produce actually matches what
+//! Pandoc itself supports. We do this by running roundtrips through
+//! Pandoc and back, making sure that the document before and after is
+//! identical and that there are no errors.
+//!
+//! This requires that Pandoc be installed and on PATH.
+
 extern crate serde_json;
 extern crate pandoc_types;
 
@@ -25,15 +32,13 @@ fn pandoc_convert(input: &str, from: &str, to: &str) -> io::Result<String> {
 
 fn check_roundtrip_stability(md_1: &str) {
     // Do an initial roundtrip to settle whitespace issues.
-    let json_1 = pandoc_convert(md_1, "markdown", "json").unwrap();
-    let md_2 = pandoc_convert(&json_1, "json", "markdown").unwrap();
+    let md_2 = pandoc_convert(md_1, "markdown", "markdown").unwrap();
 
     // Now do a roundtrip through our own parser and back.
     let json_2 = pandoc_convert(&md_2, "markdown", "json").unwrap();
     let doc_2 : Pandoc = serde_json::from_str(&json_2).unwrap();
     let json_3 = serde_json::to_string(&doc_2).unwrap();
-    let md_3 = pandoc_convert(&json_3, "json", "markdown").unwrap();
-    let json_4 = pandoc_convert(&md_3, "markdown", "json").unwrap();
+    let json_4 = pandoc_convert(&json_3, "json", "json").unwrap();
     let doc_4 : Pandoc = serde_json::from_str(&json_4).unwrap();
     assert_eq!(doc_2, doc_4);
 }
@@ -57,32 +62,161 @@ fn title() {
 }
 
 #[test]
-fn headers() {
+fn meta() {
     check_roundtrip_stability(r#"
-# a
+---
+title: asdf
+author: qwer
+date: zxcv
+foo: bar
+fun:
+  - 2
+  - times
+  - 2
+---
+"#);
+}
 
-b
+#[test]
+fn para() {
+    check_roundtrip_stability(r#"
+first paragraph
 
-## c
+second paragraph
+"#);
+}
 
-d
+#[test]
+fn line_block() {
+    check_roundtrip_stability(r#"
+| line
+| block
+"#);
+}
 
-### e
+#[test]
+fn code_block() {
+    check_roundtrip_stability(r#"
+```bash
+$ echo hi
+$ uname -a
+```
+"#);
+}
 
-f
+#[test]
+fn raw_block() {
+    check_roundtrip_stability(r#"
+```bash
+\begin{enumerate}
+\item one
+\item two
+\end{enumerate}
+```
+"#);
+}
+
+#[test]
+fn block_quote() {
+    check_roundtrip_stability(r#"
+> "Don't worry about what anybody else is going to do. The best way to
+> predict the future is to invent it."
+>
+> --- Alan Kay
 "#);
 }
 
 #[test]
 fn lists() {
     check_roundtrip_stability(r#"
-  * a
-  * b
-  * c
-
  1. d
     e
  2. f
       * g
+
+ a. 1
+ b. 2
+ c. 3
+
+  * a
+  * b
+  * c
+
+fun
+
+: something you do with friends
+
+"#);
+}
+
+#[test]
+fn headers() {
+    check_roundtrip_stability(r#"
+# a
+
+## b
+
+### c
+
+#### d
+
+##### e
+
+###### f
+"#);
+}
+
+#[test]
+fn horizontal_rule() {
+    check_roundtrip_stability(r#"
+----
+"#);
+}
+
+#[test]
+fn table() {
+    check_roundtrip_stability(r#"
+  right left    center
+------- ------ --------
+      1 2         3
+      4 5         6
+"#);
+}
+
+#[test]
+fn div() {
+    check_roundtrip_stability(r#"
+<div id="foo" class="bar">
+
+  * 1
+  * 2
+  * 3
+
+</div>
+"#);
+}
+
+#[test]
+fn inline() {
+    check_roundtrip_stability(r#"
+str
+*emph*
+**strong**
+~~strikeout~~
+^superscript^
+~subscript~
+<span style="font-variant:small-caps;">caps</span>
+'single'
+"double"
+[see @cite]
+`code`
+line break: \
+$math$
+\rawlatex{something}
+[link](http://pandoc.org)
+![](image.png)
+[^footnote]
+
+[^footnote]: <span class="asdf">span</span>
 "#);
 }
