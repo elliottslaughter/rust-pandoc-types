@@ -30,6 +30,7 @@ before_cache:
 before_script:
   - export PATH=/opt/ghc/8.0.2/bin:/opt/cabal/1.24/bin:$PATH
   - export PATH=$PATH:$HOME/.cabal/bin
+  - cabal update
   - cabal install pandoc
   - export PATH=$PATH:$HOME/.cargo/bin
   - cargo install rustfmt || true
