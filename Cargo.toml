@@ -7,6 +7,7 @@ description = "Rust port of pandoc-types"
 repository = "https://github.com/elliottslaughter/rust-pandoc-types"
 keywords = ["pandoc", "pandoc-types"]
 categories = ["text-processing"]
+include = ["Cargo.toml", "src/**/*.rs", "tests/**/*.rs", "examples/**/*.rs", "README.md", "LICENSE.txt"]
 
 [badges]
 travis-ci = { repository = "elliottslaughter/rust-pandoc-types" }
