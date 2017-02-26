@@ -1,6 +1,5 @@
 sudo: false
 language: rust
-cache: cargo
 
 rust:
   - stable
@@ -11,6 +10,20 @@ addons:
     packages:
     - cabal-install-1.24
     - ghc-8.0.2
+
+cache:
+  cargo: true
+  directories:
+    - $HOME/.cabal/packages
+    - $HOME/.cabal/store
+    - $HOME/.cabal/bin
+
+# See: https://github.com/haskell/cabal/blob/master/.travis.yml
+before_cache:
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/build-reports.log
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/00-index*
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/01-index*
+  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/*.json
 
 before_script:
   - export PATH=$PATH:$HOME/.cabal/bin
