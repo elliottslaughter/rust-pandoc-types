@@ -9,7 +9,9 @@ const PANDOC_API_VERSION: &'static [i32] = &[1, 17, 0, 5];
 pub struct Pandoc(pub Meta, pub Vec<Block>);
 
 impl Serialize for Pandoc {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where S: Serializer
+    {
         let mut value = serializer.serialize_struct("Pandoc", 3)?;
         value.serialize_field("pandoc-api-version", PANDOC_API_VERSION)?;
         value.serialize_field("meta", &self.0)?;
@@ -19,7 +21,9 @@ impl Serialize for Pandoc {
 }
 
 impl Deserialize for Pandoc {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where D: Deserializer
+    {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         #[serde(rename = "Pandoc")]
         struct Inner {

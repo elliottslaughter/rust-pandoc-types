@@ -8,14 +8,13 @@
 extern crate serde_json;
 extern crate pandoc_types;
 
-use pandoc_types::definition::{Pandoc};
+use pandoc_types::definition::Pandoc;
 
 use std::io::{self, Read, Write};
 use std::process::{Command, Stdio};
 
 fn pandoc_convert(input: &str, from: &str, to: &str) -> io::Result<String> {
-    let process = Command::new("pandoc")
-        .arg("-s")
+    let process = Command::new("pandoc").arg("-s")
         .arg("-f")
         .arg(from)
         .arg("-t")
@@ -36,10 +35,10 @@ fn check_roundtrip_stability(md_1: &str) {
 
     // Now do a roundtrip through our own parser and back.
     let json_2 = pandoc_convert(&md_2, "markdown", "json").unwrap();
-    let doc_2 : Pandoc = serde_json::from_str(&json_2).unwrap();
+    let doc_2: Pandoc = serde_json::from_str(&json_2).unwrap();
     let json_3 = serde_json::to_string(&doc_2).unwrap();
     let json_4 = pandoc_convert(&json_3, "json", "json").unwrap();
-    let doc_4 : Pandoc = serde_json::from_str(&json_4).unwrap();
+    let doc_4: Pandoc = serde_json::from_str(&json_4).unwrap();
     assert_eq!(doc_2, doc_4);
 }
 

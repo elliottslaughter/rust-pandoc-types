@@ -9,14 +9,11 @@ fn main() {
     meta.0.insert("title".to_owned(),
                   MetaValue::MetaInlines(vec![Inline::Str("a".to_owned())]));
 
-    let doc = Pandoc(
-        meta,
-        vec![
-            Block::Header(
-                1,
-                Attr("a".to_owned(), vec![], vec![]),
-                vec![Inline::Str("a".to_owned())]),
-            Block::Para(vec![Inline::Str("b".to_owned())])]);
+    let doc = Pandoc(meta,
+                     vec![Block::Header(1,
+                                        Attr("a".to_owned(), vec![], vec![]),
+                                        vec![Inline::Str("a".to_owned())]),
+                          Block::Para(vec![Inline::Str("b".to_owned())])]);
 
     let s = serde_json::to_string(&doc).unwrap();
     println!("serialized = {}", s);
