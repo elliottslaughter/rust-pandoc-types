@@ -1,0 +1,17 @@
+sudo: false
+language: rust
+cache: cargo
+
+rust:
+  - stable
+  - beta
+
+before_script:
+  - cargo install rustfmt || true
+
+script:
+  - cargo clean
+  - cargo fmt -- --write-mode=diff
+  - cargo build
+  - cargo test
+  - cargo run --example definition
