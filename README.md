@@ -3,6 +3,13 @@
 This library provides a Rust port of the [pandoc-types Haskell
 package](https://hackage.haskell.org/package/pandoc-types).
 
+To install, add the following to your `Cargo.toml`:
+
+```
+[dependencies]
+pandoc_types = "0.1"
+```
+
 ## What this library is for
 
 The purpose of pandoc-types is to allow Rust programs to natively
