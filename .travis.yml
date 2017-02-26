@@ -6,6 +6,11 @@ rust:
   - stable
   - beta
 
+addons:
+  apt:
+    packages:
+    - pandoc
+
 before_script:
   - export PATH=$PATH:~/.cargo/bin
   - cargo install rustfmt || true
