@@ -6,11 +6,12 @@ package](https://hackage.haskell.org/package/pandoc-types).
 ## What this library is for
 
 The purpose of pandoc-types is to allow Rust programs to natively
-manipulate Pandoc documents. Using this library, Rust programs should
-be able to create and modify Pandoc documents in a principled way
-(i.e. via ASTs, not text). This library can also be used along with
-[serde_json](https://github.com/serde-rs/json) to serialize and
-deserialize Pandoc documents to and from Pandoc's JSON format.
+manipulate [Pandoc](http://pandoc.org/) documents. Using this library,
+Rust programs should be able to create and modify Pandoc documents in
+a principled way (i.e. via ASTs, not text). This library can also be
+used along with [serde_json](https://github.com/serde-rs/json) to
+serialize and deserialize Pandoc documents to and from Pandoc's JSON
+format.
 
 ## What this library is NOT for
 
