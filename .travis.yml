@@ -9,10 +9,13 @@ rust:
 addons:
   apt:
     packages:
-    - pandoc
+    - cabal-install-1.24
+    - ghc-8.0.2
 
 before_script:
-  - export PATH=$PATH:~/.cargo/bin
+  - export PATH=$PATH:$HOME/.cabal/bin
+  - cabal install pandoc
+  - export PATH=$PATH:$HOME/.cargo/bin
   - cargo install rustfmt || true
 
 script:
