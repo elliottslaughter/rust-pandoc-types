@@ -20,9 +20,9 @@ impl Serialize for Pandoc {
     }
 }
 
-impl Deserialize for Pandoc {
+impl<'a> Deserialize<'a> for Pandoc {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where D: Deserializer
+        where D: Deserializer<'a>
     {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         #[serde(rename = "Pandoc")]
