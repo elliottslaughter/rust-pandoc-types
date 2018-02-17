@@ -5,8 +5,8 @@
 //!
 //! This requires that Pandoc be installed and on PATH.
 
-extern crate serde_json;
 extern crate pandoc_types;
+extern crate serde_json;
 
 use pandoc_types::definition::Pandoc;
 
@@ -14,7 +14,8 @@ use std::io::{self, Read, Write};
 use std::process::{Command, Stdio};
 
 fn pandoc_convert(input: &str, from: &str, to: &str) -> io::Result<String> {
-    let process = Command::new("pandoc").arg("-s")
+    let process = Command::new("pandoc")
+        .arg("-s")
         .arg("-f")
         .arg(from)
         .arg("-t")
@@ -54,15 +55,18 @@ fn empty() {
 
 #[test]
 fn title() {
-    check_roundtrip_stability(r#"% title
+    check_roundtrip_stability(
+        r#"% title
 % author
 % date
-"#);
+"#,
+    );
 }
 
 #[test]
 fn meta() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 ---
 title: asdf
 author: qwer
@@ -73,61 +77,73 @@ fun:
   - times
   - 2
 ---
-"#);
+"#,
+    );
 }
 
 #[test]
 fn para() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 first paragraph
 
 second paragraph
-"#);
+"#,
+    );
 }
 
 #[test]
 fn line_block() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 | line
 | block
-"#);
+"#,
+    );
 }
 
 #[test]
 fn code_block() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 ```bash
 $ echo hi
 $ uname -a
 ```
-"#);
+"#,
+    );
 }
 
 #[test]
 fn raw_block() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 ```bash
 \begin{enumerate}
 \item one
 \item two
 \end{enumerate}
 ```
-"#);
+"#,
+    );
 }
 
 #[test]
 fn block_quote() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 > "Don't worry about what anybody else is going to do. The best way to
 > predict the future is to invent it."
 >
 > --- Alan Kay
-"#);
+"#,
+    );
 }
 
 #[test]
 fn lists() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
  1. d
     e
  2. f
@@ -145,12 +161,14 @@ fun
 
 : something you do with friends
 
-"#);
+"#,
+    );
 }
 
 #[test]
 fn headers() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 # a
 
 ## b
@@ -162,29 +180,35 @@ fn headers() {
 ##### e
 
 ###### f
-"#);
+"#,
+    );
 }
 
 #[test]
 fn horizontal_rule() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 ----
-"#);
+"#,
+    );
 }
 
 #[test]
 fn table() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
   right left    center
 ------- ------ --------
       1 2         3
       4 5         6
-"#);
+"#,
+    );
 }
 
 #[test]
 fn div() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 <div id="foo" class="bar">
 
   * 1
@@ -192,12 +216,14 @@ fn div() {
   * 3
 
 </div>
-"#);
+"#,
+    );
 }
 
 #[test]
 fn inline() {
-    check_roundtrip_stability(r#"
+    check_roundtrip_stability(
+        r#"
 str
 *emph*
 **strong**
@@ -217,5 +243,6 @@ $math$
 [^footnote]
 
 [^footnote]: <span class="asdf">span</span>
-"#);
+"#,
+    );
 }

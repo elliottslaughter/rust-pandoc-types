@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use serde::{Serialize, Serializer, Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde::ser::SerializeStruct;
 
 const PANDOC_API_VERSION: &'static [i32] = &[1, 17, 0, 5];
@@ -10,7 +10,8 @@ pub struct Pandoc(pub Meta, pub Vec<Block>);
 
 impl Serialize for Pandoc {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where S: Serializer
+    where
+        S: Serializer,
     {
         let mut value = serializer.serialize_struct("Pandoc", 3)?;
         value.serialize_field("pandoc-api-version", PANDOC_API_VERSION)?;
@@ -22,21 +23,22 @@ impl Serialize for Pandoc {
 
 impl<'a> Deserialize<'a> for Pandoc {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where D: Deserializer<'a>
+    where
+        D: Deserializer<'a>,
     {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         #[serde(rename = "Pandoc")]
         struct Inner {
             meta: Meta,
             blocks: Vec<Block>,
-            #[serde(rename = "pandoc-api-version")]
-            version: Vec<i32>,
+            #[serde(rename = "pandoc-api-version")] version: Vec<i32>,
         }
 
         let value = Inner::deserialize(deserializer)?;
         // FIXME: Should check this, but need a better error.
-        assert!(value.version[0] == PANDOC_API_VERSION[0] &&
-                value.version[1] == PANDOC_API_VERSION[1]);
+        assert!(
+            value.version[0] == PANDOC_API_VERSION[0] && value.version[1] == PANDOC_API_VERSION[1]
+        );
         Ok(Pandoc(value.meta, value.blocks))
     }
 }
@@ -83,7 +85,13 @@ pub enum Block {
     DefinitionList(Vec<(Vec<Inline>, Vec<Vec<Block>>)>),
     Header(i32, Attr, Vec<Inline>),
     HorizontalRule,
-    Table(Vec<Inline>, Vec<Alignment>, Vec<f64>, Vec<TableCell>, Vec<Vec<TableCell>>),
+    Table(
+        Vec<Inline>,
+        Vec<Alignment>,
+        Vec<f64>,
+        Vec<TableCell>,
+        Vec<Vec<TableCell>>,
+    ),
     Div(Attr, Vec<Block>),
     Null,
 }
@@ -179,18 +187,12 @@ pub enum MathType {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Citation {
-    #[serde(rename = "citationId")]
-    pub citation_id: String,
-    #[serde(rename = "citationPrefix")]
-    pub citation_prefix: Vec<Inline>,
-    #[serde(rename = "citationSuffix")]
-    pub citation_suffix: Vec<Inline>,
-    #[serde(rename = "citationMode")]
-    pub citation_mode: CitationMode,
-    #[serde(rename = "citationNoteNum")]
-    pub citation_note_num: i32,
-    #[serde(rename = "citationHash")]
-    pub citation_hash: i32,
+    #[serde(rename = "citationId")] pub citation_id: String,
+    #[serde(rename = "citationPrefix")] pub citation_prefix: Vec<Inline>,
+    #[serde(rename = "citationSuffix")] pub citation_suffix: Vec<Inline>,
+    #[serde(rename = "citationMode")] pub citation_mode: CitationMode,
+    #[serde(rename = "citationNoteNum")] pub citation_note_num: i32,
+    #[serde(rename = "citationHash")] pub citation_hash: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
