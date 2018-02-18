@@ -33,13 +33,11 @@ before_script:
   - cabal update
   - cabal install pandoc
   - export PATH=$PATH:$HOME/.cargo/bin
-  - rustup toolchain install nightly
-  - rustup component add --toolchain nightly rustfmt-preview
-  - which rustfmt || cargo install --force rustfmt-nightly
+  - rustup component add rustfmt-preview
 
 script:
   - cargo clean
-  - cargo +nightly fmt -- --write-mode=diff
+  - cargo fmt -- --write-mode=diff
   - cargo build
   - cargo test
   - cargo run --example definition
