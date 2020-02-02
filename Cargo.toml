@@ -9,9 +9,7 @@ keywords = ["pandoc", "pandoc-types"]
 categories = ["text-processing"]
 readme = "README.md"
 include = ["Cargo.toml", "src/**/*.rs", "tests/**/*.rs", "examples/**/*.rs", "README.md", "LICENSE.txt"]
-
-[badges]
-travis-ci = { repository = "elliottslaughter/rust-pandoc-types" }
+edition = "2018"
 
 [dependencies]
 serde = "1.0"
