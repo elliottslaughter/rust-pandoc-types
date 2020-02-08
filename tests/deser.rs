@@ -1,4 +1,4 @@
-use pandoc_types::definition::Pandoc;
+use pandoc_types::Pandoc;
 use std::process::{Command, Stdio};
 use std::io::Write;
 
