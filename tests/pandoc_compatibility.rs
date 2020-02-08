@@ -8,7 +8,7 @@
 extern crate pandoc_types;
 extern crate serde_json;
 
-use pandoc_types::definition::Pandoc;
+use pandoc_types::Pandoc;
 
 use std::io::{self, Read, Write};
 use std::process::{Command, Stdio};
