@@ -7,7 +7,7 @@ pub struct Pandoc {
     pub meta: HashMap<String, MetaValue>,
     pub blocks: Vec<Block>,
     #[serde(rename = "pandoc-api-version", default)]
-    pub api_version: Option<Vec<i32>>
+    pub api_version: Option<Vec<i32>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -137,12 +137,18 @@ pub enum MathType {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Citation {
-    #[serde(rename = "citationId")] pub citation_id: String,
-    #[serde(rename = "citationPrefix")] pub citation_prefix: Vec<Inline>,
-    #[serde(rename = "citationSuffix")] pub citation_suffix: Vec<Inline>,
-    #[serde(rename = "citationMode")] pub citation_mode: CitationMode,
-    #[serde(rename = "citationNoteNum")] pub citation_note_num: i32,
-    #[serde(rename = "citationHash")] pub citation_hash: i32,
+    #[serde(rename = "citationId")]
+    pub citation_id: String,
+    #[serde(rename = "citationPrefix")]
+    pub citation_prefix: Vec<Inline>,
+    #[serde(rename = "citationSuffix")]
+    pub citation_suffix: Vec<Inline>,
+    #[serde(rename = "citationMode")]
+    pub citation_mode: CitationMode,
+    #[serde(rename = "citationNoteNum")]
+    pub citation_note_num: i32,
+    #[serde(rename = "citationHash")]
+    pub citation_hash: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]

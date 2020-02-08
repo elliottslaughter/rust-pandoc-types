@@ -20,7 +20,7 @@ fn main() {
     let doc = Pandoc {
         meta,
         blocks,
-        api_version: None
+        api_version: None,
     };
 
     let s = serde_json::to_string(&doc).unwrap();
