@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde::ser::SerializeStruct;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 const PANDOC_API_VERSION: &'static [i32] = &[1, 20];
 
@@ -31,7 +31,8 @@ impl<'a> Deserialize<'a> for Pandoc {
         struct Inner {
             meta: Meta,
             blocks: Vec<Block>,
-            #[serde(rename = "pandoc-api-version")] version: Vec<i32>,
+            #[serde(rename = "pandoc-api-version")]
+            version: Vec<i32>,
         }
 
         let value = Inner::deserialize(deserializer)?;
@@ -187,12 +188,18 @@ pub enum MathType {
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Citation {
-    #[serde(rename = "citationId")] pub citation_id: String,
-    #[serde(rename = "citationPrefix")] pub citation_prefix: Vec<Inline>,
-    #[serde(rename = "citationSuffix")] pub citation_suffix: Vec<Inline>,
-    #[serde(rename = "citationMode")] pub citation_mode: CitationMode,
-    #[serde(rename = "citationNoteNum")] pub citation_note_num: i32,
-    #[serde(rename = "citationHash")] pub citation_hash: i32,
+    #[serde(rename = "citationId")]
+    pub citation_id: String,
+    #[serde(rename = "citationPrefix")]
+    pub citation_prefix: Vec<Inline>,
+    #[serde(rename = "citationSuffix")]
+    pub citation_suffix: Vec<Inline>,
+    #[serde(rename = "citationMode")]
+    pub citation_mode: CitationMode,
+    #[serde(rename = "citationNoteNum")]
+    pub citation_note_num: i32,
+    #[serde(rename = "citationHash")]
+    pub citation_hash: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
