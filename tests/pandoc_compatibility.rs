@@ -247,21 +247,15 @@ $math$
 
 #[test]
 fn markdown_reader_more() {
-    check_roundtrip_stability(
-        include_str!("markdown-reader-more.txt")
-    );
+    check_roundtrip_stability(include_str!("markdown-reader-more.txt"));
 }
 
 #[test]
 fn tables() {
-    check_roundtrip_stability(
-        include_str!("tables.txt")
-    );
+    check_roundtrip_stability(include_str!("tables.txt"));
 }
 
 #[test]
 fn testsuite() {
-    check_roundtrip_stability(
-        include_str!("testsuite.txt")
-    );
+    check_roundtrip_stability(include_str!("testsuite.txt"));
 }
