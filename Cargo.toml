@@ -8,7 +8,7 @@ repository = "https://github.com/elliottslaughter/rust-pandoc-types"
 keywords = ["pandoc", "pandoc-types"]
 categories = ["text-processing"]
 readme = "README.md"
-include = ["Cargo.toml", "src/**/*.rs", "tests/**/*.rs", "examples/**/*.rs", "README.md", "LICENSE.txt"]
+include = ["Cargo.toml", "src/**/*.rs", "tests/**/*.rs", "tests/**/*.txt", "examples/**/*.rs", "README.md", "LICENSE.txt"]
 edition = "2018"
 
 [badges]
