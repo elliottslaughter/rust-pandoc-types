@@ -29,7 +29,7 @@ itself. If that's what you're looking for, consider the
 ## Compatibility
 
 The current version is **compatible with Haskell pandoc-types
-1.17**. This is the most recent version at the time of writing.
+1.20**. This is the most recent version at the time of writing.
 
 ## Supported modules
 

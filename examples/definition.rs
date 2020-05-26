@@ -1,6 +1,4 @@
-extern crate serde_json;
-
-extern crate pandoc_types;
+use serde_json;
 
 use pandoc_types::definition::*;
 
