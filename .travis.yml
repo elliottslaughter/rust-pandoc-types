@@ -1,43 +1,22 @@
-sudo: false
+sudo: true
+distro: xenial
 language: rust
 
 rust:
   - stable
   - beta
 
-addons:
-  apt:
-    sources:
-      - hvr-ghc
-    packages:
-      - cabal-install-1.24
-      - ghc-8.0.2
-
 cache:
   cargo: true
-  directories:
-    - $HOME/.cabal/packages
-    - $HOME/.cabal/store
-    - $HOME/.cabal/bin
-
-# See: https://github.com/haskell/cabal/blob/master/.travis.yml
-before_cache:
-  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/build-reports.log
-  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/00-index*
-  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/01-index*
-  - rm -fv $HOME/.cabal/packages/hackage.haskell.org/*.json
 
 before_script:
-  - export PATH=/opt/ghc/8.0.2/bin:/opt/cabal/1.24/bin:$PATH
-  - export PATH=$PATH:$HOME/.cabal/bin
-  - cabal update
-  - cabal install pandoc
-  - export PATH=$PATH:$HOME/.cargo/bin
-  - rustup component add rustfmt-preview
+  - wget https://github.com/jgm/pandoc/releases/download/2.9.2.1/pandoc-2.9.2.1-1-amd64.deb
+  - sudo dpkg -i pandoc-2.9.2.1-1-amd64.deb
+  - rustup component add rustfmt
 
 script:
   - cargo clean
-  - cargo fmt -- --write-mode=diff
+  - cargo fmt -- --check
   - cargo build
   - cargo test
   - cargo run --example definition
