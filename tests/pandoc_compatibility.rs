@@ -5,10 +5,8 @@
 //!
 //! This requires that Pandoc be installed and on PATH.
 
-extern crate pandoc_types;
-extern crate serde_json;
-
 use pandoc_types::definition::Pandoc;
+use serde_json;
 
 use std::io::{self, Read, Write};
 use std::process::{Command, Stdio};

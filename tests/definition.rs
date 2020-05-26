@@ -1,5 +1,3 @@
-extern crate pandoc_types;
-
 use pandoc_types::definition::*;
 
 #[test]
