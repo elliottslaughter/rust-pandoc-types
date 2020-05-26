@@ -7,7 +7,7 @@ To install, add the following to your `Cargo.toml`:
 
 ```
 [dependencies]
-pandoc_types = "0.2"
+pandoc_types = "0.3"
 ```
 
 ## What this library is for
