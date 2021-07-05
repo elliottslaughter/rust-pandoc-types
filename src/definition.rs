@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-const PANDOC_API_VERSION: &'static [i32] = &[1, 20];
+const PANDOC_API_VERSION: &'static [i32] = &[1, 22];
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Pandoc(pub Meta, pub Vec<Block>);
