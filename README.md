@@ -1,4 +1,4 @@
-# Rust port of pandoc-types [![Build Status](https://travis-ci.org/elliottslaughter/rust-pandoc-types.svg?branch=master)](https://travis-ci.org/elliottslaughter/rust-pandoc-types)
+# Rust port of pandoc-types ![Build status](https://github.com/nokome/rust-pandoc-types/actions/workflows/test.yml/badge.svg)
 
 This library provides a Rust port of the [pandoc-types Haskell
 package](https://hackage.haskell.org/package/pandoc-types).
