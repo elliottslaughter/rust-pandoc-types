@@ -143,7 +143,7 @@ pub enum ColWidth {
 pub struct ColSpec(pub Alignment, pub ColWidth);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Row(pub Attr, Vec<Cell>);
+pub struct Row(pub Attr, pub Vec<Cell>);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct TableHead(pub Attr, pub Vec<Row>);
