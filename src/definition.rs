@@ -102,6 +102,7 @@ pub enum Block {
 pub enum Inline {
     Str(String),
     Emph(Vec<Inline>),
+    Underline(Vec<Inline>),
     Strong(Vec<Inline>),
     Strikeout(Vec<Inline>),
     Superscript(Vec<Inline>),

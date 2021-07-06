@@ -224,6 +224,7 @@ fn inline() {
         r#"
 str
 *emph*
+<u>underline</u>
 **strong**
 ~~strikeout~~
 ^superscript^
