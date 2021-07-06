@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-const PANDOC_API_VERSION: &'static [i32] = &[1, 22];
+const PANDOC_API_VERSION: [i32; 2] = [1, 22];
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Pandoc(pub Meta, pub Vec<Block>);
@@ -14,7 +14,7 @@ impl Serialize for Pandoc {
         S: Serializer,
     {
         let mut value = serializer.serialize_struct("Pandoc", 3)?;
-        value.serialize_field("pandoc-api-version", PANDOC_API_VERSION)?;
+        value.serialize_field("pandoc-api-version", &PANDOC_API_VERSION)?;
         value.serialize_field("meta", &self.0)?;
         value.serialize_field("blocks", &self.1)?;
         value.end()
@@ -56,7 +56,7 @@ impl Meta {
         self.0.is_empty()
     }
 
-    pub fn lookup(&self, key: &String) -> Option<&MetaValue> {
+    pub fn lookup(&self, key: &str) -> Option<&MetaValue> {
         self.0.get(key)
     }
 }
