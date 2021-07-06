@@ -72,3 +72,28 @@ Multiline table without column headers:
    Second   row                5.0  Here's another one.  Note
                                     the blank line between rows.
 ----------  ---------  -----------  ---------------------------
+
+Table with column widths:
+
+<table>
+    <colgroup>
+        <col width="11%">
+        <col width="22%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>First</th>
+            <th>Second</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td>B</td>
+        </tr>
+        <tr>
+            <td>C</td>
+            <td>D</td>
+        </tr>
+    </tbody>
+</table>

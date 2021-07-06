@@ -87,11 +87,12 @@ pub enum Block {
     Header(i32, Attr, Vec<Inline>),
     HorizontalRule,
     Table(
-        Vec<Inline>,
-        Vec<Alignment>,
-        Vec<f64>,
-        Vec<TableCell>,
-        Vec<Vec<TableCell>>,
+        Attr,
+        Caption,
+        Vec<ColSpec>,
+        TableHead,
+        Vec<TableBody>,
+        TableFoot,
     ),
     Div(Attr, Vec<Block>),
     Null,
@@ -132,6 +133,34 @@ pub enum Alignment {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "t", content = "c")]
+pub enum ColWidth {
+    ColWidth(f64),
+    ColWidthDefault,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ColSpec(pub Alignment, pub ColWidth);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Row(pub Attr, Vec<Cell>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct TableHead(pub Attr, pub Vec<Row>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct TableBody(pub Attr, pub i32, pub Vec<Row>, pub Vec<Row>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct TableFoot(pub Attr, pub Vec<Row>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Caption(pub Option<Vec<Inline>>, pub Vec<Block>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Cell(pub Attr, pub Alignment, pub i32, pub i32, pub Vec<Block>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ListAttributes(pub i32, pub ListNumberStyle, pub ListNumberDelim);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -166,9 +195,6 @@ impl Attr {
         Attr(String::new(), Vec::new(), Vec::new())
     }
 }
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct TableCell(pub Vec<Block>);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
