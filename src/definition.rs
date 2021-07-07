@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-const PANDOC_API_VERSION: &'static [i32] = &[1, 20];
+const PANDOC_API_VERSION: [i32; 2] = [1, 22];
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Pandoc(pub Meta, pub Vec<Block>);
@@ -14,7 +14,7 @@ impl Serialize for Pandoc {
         S: Serializer,
     {
         let mut value = serializer.serialize_struct("Pandoc", 3)?;
-        value.serialize_field("pandoc-api-version", PANDOC_API_VERSION)?;
+        value.serialize_field("pandoc-api-version", &PANDOC_API_VERSION)?;
         value.serialize_field("meta", &self.0)?;
         value.serialize_field("blocks", &self.1)?;
         value.end()
@@ -56,7 +56,7 @@ impl Meta {
         self.0.is_empty()
     }
 
-    pub fn lookup(&self, key: &String) -> Option<&MetaValue> {
+    pub fn lookup(&self, key: &str) -> Option<&MetaValue> {
         self.0.get(key)
     }
 }
@@ -87,11 +87,12 @@ pub enum Block {
     Header(i32, Attr, Vec<Inline>),
     HorizontalRule,
     Table(
-        Vec<Inline>,
-        Vec<Alignment>,
-        Vec<f64>,
-        Vec<TableCell>,
-        Vec<Vec<TableCell>>,
+        Attr,
+        Caption,
+        Vec<ColSpec>,
+        TableHead,
+        Vec<TableBody>,
+        TableFoot,
     ),
     Div(Attr, Vec<Block>),
     Null,
@@ -102,6 +103,7 @@ pub enum Block {
 pub enum Inline {
     Str(String),
     Emph(Vec<Inline>),
+    Underline(Vec<Inline>),
     Strong(Vec<Inline>),
     Strikeout(Vec<Inline>),
     Superscript(Vec<Inline>),
@@ -129,6 +131,34 @@ pub enum Alignment {
     AlignCenter,
     AlignDefault,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(tag = "t", content = "c")]
+pub enum ColWidth {
+    ColWidth(f64),
+    ColWidthDefault,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct ColSpec(pub Alignment, pub ColWidth);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Row(pub Attr, pub Vec<Cell>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct TableHead(pub Attr, pub Vec<Row>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct TableBody(pub Attr, pub i32, pub Vec<Row>, pub Vec<Row>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct TableFoot(pub Attr, pub Vec<Row>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Caption(pub Option<Vec<Inline>>, pub Vec<Block>);
+
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+pub struct Cell(pub Attr, pub Alignment, pub i32, pub i32, pub Vec<Block>);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ListAttributes(pub i32, pub ListNumberStyle, pub ListNumberDelim);
@@ -165,9 +195,6 @@ impl Attr {
         Attr(String::new(), Vec::new(), Vec::new())
     }
 }
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct TableCell(pub Vec<Block>);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]

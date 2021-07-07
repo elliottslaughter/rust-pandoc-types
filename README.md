@@ -1,4 +1,4 @@
-# Rust port of pandoc-types [![Build Status](https://travis-ci.org/elliottslaughter/rust-pandoc-types.svg?branch=master)](https://travis-ci.org/elliottslaughter/rust-pandoc-types)
+# Rust port of pandoc-types ![Build status](https://github.com/elliottslaughter/rust-pandoc-types/actions/workflows/test.yml/badge.svg)
 
 This library provides a Rust port of the [pandoc-types Haskell
 package](https://hackage.haskell.org/package/pandoc-types).
@@ -29,7 +29,7 @@ itself. If that's what you're looking for, consider the
 ## Compatibility
 
 The current version is **compatible with Haskell pandoc-types
-1.20**. This is the most recent version at the time of writing.
+1.22**. This is the most recent version at the time of writing.
 
 ## Supported modules
 
