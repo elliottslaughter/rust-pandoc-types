@@ -6,7 +6,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 const PANDOC_API_VERSION: [i32; 2] = [1, 22];
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct Pandoc(pub Meta, pub Vec<Block>);
+pub struct Pandoc(pub HashMap<String, MetaValue>, pub Vec<Block>);
 
 impl Serialize for Pandoc {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -29,7 +29,7 @@ impl<'a> Deserialize<'a> for Pandoc {
         #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
         #[serde(rename = "Pandoc")]
         struct Inner {
-            meta: Meta,
+            meta: HashMap<String, MetaValue>,
             blocks: Vec<Block>,
             #[serde(rename = "pandoc-api-version")]
             version: Vec<i32>,
@@ -48,23 +48,6 @@ impl<'a> Deserialize<'a> for Pandoc {
         }
 
         Ok(Pandoc(value.meta, value.blocks))
-    }
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Meta(pub HashMap<String, MetaValue>);
-
-impl Meta {
-    pub fn null() -> Meta {
-        Meta(HashMap::new())
-    }
-
-    pub fn is_null(&self) -> bool {
-        self.0.is_empty()
-    }
-
-    pub fn lookup(&self, key: &str) -> Option<&MetaValue> {
-        self.0.get(key)
     }
 }
 
@@ -277,11 +260,6 @@ pub enum CitationMode {
 mod tests {
     use super::*;
     use serde_json::json;
-
-    #[test]
-    fn meta_null() {
-        assert!(Meta::null().is_null());
-    }
 
     #[test]
     fn version() {

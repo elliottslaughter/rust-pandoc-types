@@ -1,10 +1,12 @@
+use std::collections::HashMap;
+
 use serde_json;
 
 use pandoc_types::definition::*;
 
 fn main() {
-    let mut meta = Meta::null();
-    meta.0.insert(
+    let mut meta = HashMap::default();
+    meta.insert(
         "title".to_owned(),
         MetaValue::MetaInlines(vec![Inline::Str("a".to_owned())]),
     );
