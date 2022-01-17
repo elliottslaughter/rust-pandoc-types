@@ -248,18 +248,13 @@ pub enum MathType {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct Citation {
-    #[serde(rename = "citationId")]
     pub citation_id: String,
-    #[serde(rename = "citationPrefix")]
     pub citation_prefix: Vec<Inline>,
-    #[serde(rename = "citationSuffix")]
     pub citation_suffix: Vec<Inline>,
-    #[serde(rename = "citationMode")]
     pub citation_mode: CitationMode,
-    #[serde(rename = "citationNoteNum")]
     pub citation_note_num: i32,
-    #[serde(rename = "citationHash")]
     pub citation_hash: i32,
 }
 
