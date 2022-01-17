@@ -75,17 +75,29 @@ pub enum MetaValue {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
 pub enum Block {
+    /// Plain text, not a paragraph
     Plain(Vec<Inline>),
+    /// Paragraph
     Para(Vec<Inline>),
+    /// Multiple non-breaking lines
     LineBlock(Vec<Vec<Inline>>),
+    /// Code block (literal) with attributes
     CodeBlock(Attr, String),
+    /// Raw block
     RawBlock(Format, String),
+    /// Block quote
     BlockQuote(Vec<Block>),
+    /// Ordered list (attributes and a list of items, each a list of blocks)
     OrderedList(ListAttributes, Vec<Vec<Block>>),
+    /// Bullet list (list of items, each a list of blocks)
     BulletList(Vec<Vec<Block>>),
+    /// Definition list. Each list item is a pair consisting of a term (a list of inlines) and one or more definitions (each a list of blocks)
     DefinitionList(Vec<(Vec<Inline>, Vec<Vec<Block>>)>),
+    /// Header - level (integer) and text (inlines)
     Header(i32, Attr, Vec<Inline>),
+    /// Horizontal rule
     HorizontalRule,
+    /// Table, with attributes, caption, optional short caption, column alignments and widths (required), table head, table bodies, and table foot
     Table(
         Attr,
         Caption,
@@ -94,32 +106,54 @@ pub enum Block {
         Vec<TableBody>,
         TableFoot,
     ),
+    /// Generic block container with attributes
     Div(Attr, Vec<Block>),
+    /// Nothing
     Null,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
 pub enum Inline {
+    /// Text
     Str(String),
+    /// Emphasized text
     Emph(Vec<Inline>),
+    /// Underlined text
     Underline(Vec<Inline>),
+    /// Strongly emphasized text
     Strong(Vec<Inline>),
+    /// Strikeout text
     Strikeout(Vec<Inline>),
+    /// Superscripted text
     Superscript(Vec<Inline>),
+    /// Subscripted text
     Subscript(Vec<Inline>),
+    /// Small caps text
     SmallCaps(Vec<Inline>),
+    /// Quoted text
     Quoted(QuoteType, Vec<Inline>),
+    /// Citation
     Cite(Vec<Citation>, Vec<Inline>),
+    /// Inline code
     Code(Attr, String),
+    /// Inter-word space
     Space,
+    /// Soft line break
     SoftBreak,
+    /// Hard line break
     LineBreak,
+    /// TeX math
     Math(MathType, String),
+    /// Raw inline
     RawInline(Format, String),
+    /// Hyperlink: alt text (list of inlines), target
     Link(Attr, Vec<Inline>, Target),
+    /// Image: alt text (list of inlines), target
     Image(Attr, Vec<Inline>, Target),
+    /// Footnote or endnote
     Note(Vec<Block>),
+    /// Generic inline container with attributes
     Span(Attr, Vec<Inline>),
 }
 
