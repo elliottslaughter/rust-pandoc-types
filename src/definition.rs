@@ -175,7 +175,7 @@ impl Default for ColWidth {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct ColSpec(pub Alignment, pub ColWidth);
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
