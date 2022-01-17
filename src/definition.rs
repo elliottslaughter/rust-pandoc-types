@@ -211,14 +211,8 @@ pub enum ListNumberDelim {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Format(pub String);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct Attr(pub String, pub Vec<String>, pub Vec<(String, String)>);
-
-impl Attr {
-    pub fn null() -> Attr {
-        Attr(String::new(), Vec::new(), Vec::new())
-    }
-}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
