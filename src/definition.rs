@@ -36,10 +36,17 @@ impl<'a> Deserialize<'a> for Pandoc {
         }
 
         let value = Inner::deserialize(deserializer)?;
-        // FIXME: Should check this, but need a better error.
-        assert!(
-            value.version[0] == PANDOC_API_VERSION[0] && value.version[1] == PANDOC_API_VERSION[1]
-        );
+
+        if value.version.len() < 2
+            || value.version[0] != PANDOC_API_VERSION[0]
+            || value.version[1] != PANDOC_API_VERSION[1]
+        {
+            return Err(serde::de::Error::custom(format!(
+                "expected pandoc-api-version to start with {},{}",
+                PANDOC_API_VERSION[0], PANDOC_API_VERSION[1]
+            )));
+        }
+
         Ok(Pandoc(value.meta, value.blocks))
     }
 }
@@ -269,9 +276,34 @@ pub enum CitationMode {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
 
     #[test]
     fn meta_null() {
         assert!(Meta::null().is_null());
+    }
+
+    #[test]
+    fn version() {
+        assert!(serde_json::from_value::<Pandoc>(json!({
+            "pandoc-api-version": PANDOC_API_VERSION,
+            "meta": {},
+            "blocks": [],
+        }))
+        .is_ok());
+
+        assert!(serde_json::from_value::<Pandoc>(json!({
+            "pandoc-api-version": [],
+            "meta": {},
+            "blocks": [],
+        }))
+        .is_err());
+
+        assert!(serde_json::from_value::<Pandoc>(json!({
+            "pandoc-api-version": [PANDOC_API_VERSION[0], PANDOC_API_VERSION[1] + 1],
+            "meta": {},
+            "blocks": [],
+        }))
+        .is_err());
     }
 }
