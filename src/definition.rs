@@ -156,11 +156,23 @@ pub enum Alignment {
     AlignDefault,
 }
 
+impl Default for Alignment {
+    fn default() -> Self {
+        Self::AlignDefault
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
 pub enum ColWidth {
     ColWidth(f64),
     ColWidthDefault,
+}
+
+impl Default for ColWidth {
+    fn default() -> Self {
+        Self::ColWidthDefault
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -187,6 +199,16 @@ pub struct Cell(pub Attr, pub Alignment, pub i32, pub i32, pub Vec<Block>);
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct ListAttributes(pub i32, pub ListNumberStyle, pub ListNumberDelim);
 
+impl Default for ListAttributes {
+    fn default() -> Self {
+        Self {
+            start_number: 1,
+            style: ListNumberStyle::default(),
+            delim: ListNumberDelim::default(),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
 pub enum ListNumberStyle {
@@ -199,6 +221,12 @@ pub enum ListNumberStyle {
     UpperAlpha,
 }
 
+impl Default for ListNumberStyle {
+    fn default() -> Self {
+        Self::DefaultStyle
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
 pub enum ListNumberDelim {
@@ -206,6 +234,12 @@ pub enum ListNumberDelim {
     Period,
     OneParen,
     TwoParens,
+}
+
+impl Default for ListNumberDelim {
+    fn default() -> Self {
+        Self::DefaultDelim
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
