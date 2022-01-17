@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde_tuple::{Deserialize_tuple, Serialize_tuple};
 
 const PANDOC_API_VERSION: [i32; 2] = [1, 22];
 
@@ -184,8 +185,13 @@ pub struct Row(pub Attr, pub Vec<Cell>);
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct TableHead(pub Attr, pub Vec<Row>);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct TableBody(pub Attr, pub i32, pub Vec<Row>, pub Vec<Row>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
+pub struct TableBody {
+    pub attr: Attr,
+    pub row_head_columns: i32,
+    pub head: Vec<Row>,
+    pub body: Vec<Row>,
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct TableFoot(pub Attr, pub Vec<Row>);
@@ -193,11 +199,21 @@ pub struct TableFoot(pub Attr, pub Vec<Row>);
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Caption(pub Option<Vec<Inline>>, pub Vec<Block>);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Cell(pub Attr, pub Alignment, pub i32, pub i32, pub Vec<Block>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
+pub struct Cell {
+    pub attr: Attr,
+    pub align: Alignment,
+    pub row_span: i32,
+    pub col_span: i32,
+    pub content: Vec<Block>,
+}
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct ListAttributes(pub i32, pub ListNumberStyle, pub ListNumberDelim);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
+pub struct ListAttributes {
+    pub start_number: i32,
+    pub style: ListNumberStyle,
+    pub delim: ListNumberDelim,
+}
 
 impl Default for ListAttributes {
     fn default() -> Self {
@@ -245,8 +261,12 @@ impl Default for ListNumberDelim {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct Format(pub String);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
-pub struct Attr(pub String, pub Vec<String>, pub Vec<(String, String)>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct Attr {
+    pub identifier: String,
+    pub classes: Vec<String>,
+    pub attributes: Vec<(String, String)>,
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]
@@ -255,8 +275,11 @@ pub enum QuoteType {
     DoubleQuote,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Target(pub String, pub String);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
+pub struct Target {
+    pub url: String,
+    pub title: String,
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(tag = "t", content = "c")]

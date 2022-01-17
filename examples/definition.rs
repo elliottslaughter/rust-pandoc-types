@@ -16,7 +16,11 @@ fn main() {
         vec![
             Block::Header(
                 1,
-                Attr("a".to_owned(), vec![], vec![]),
+                Attr {
+                    identifier: "a".to_owned(),
+                    classes: vec![],
+                    attributes: vec![],
+                },
                 vec![Inline::Str("a".to_owned())],
             ),
             Block::Para(vec![Inline::Str("b".to_owned())]),
