@@ -7,6 +7,8 @@ use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_tuple::{Deserialize_tuple, Serialize_tuple};
 
+pub mod extra;
+
 const PANDOC_API_VERSION: [i32; 2] = [1, 22];
 
 #[derive(Debug, Clone, PartialEq)]
