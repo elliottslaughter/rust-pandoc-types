@@ -1,3 +1,6 @@
+//! This module contatins the types from [Text.Pandoc.Definition] ported to Rust.
+//!
+//! [Text.Pandoc.Definition]: https://hackage.haskell.org/package/pandoc-types/docs/Text-Pandoc-Definition.html
 use std::collections::HashMap;
 
 use serde::ser::SerializeStruct;
