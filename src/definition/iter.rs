@@ -1,4 +1,4 @@
-use super::{Block, Caption, Inline, Pandoc, Row, TableFoot, TableHead};
+use super::{Block, Caption, Format, Inline, Pandoc, Row, TableFoot, TableHead};
 
 /// A trait to iterate over the immediately contained blocks in a type.
 pub trait IterBlocks<'a> {
@@ -282,6 +282,69 @@ where
             IterTypes::FlattenIter(iter) => iter.next(),
             IterTypes::FlatMap(iter) => iter.next(),
             IterTypes::Table(iter) => iter.next(),
+        }
+    }
+}
+
+/// Converts the given element into a string with all formatting removed.
+pub trait Stringify {
+    /// Converts the given element into a string with all formatting removed.
+    fn stringify(&self) -> String {
+        let mut s = String::new();
+        self.stringify_to(&mut s);
+        s
+    }
+
+    /// Appends the stringified element to the given string.
+    fn stringify_to(&self, str: &mut String);
+}
+
+impl Stringify for Inline {
+    fn stringify_to(&self, str: &mut String) {
+        // Should match the implementation of pandoc's Haskell API
+        // https://hackage.haskell.org/package/pandoc/docs/src/Text.Pandoc.Shared.html#stringify
+        match self {
+            Inline::Space => str.push(' '),
+            Inline::SoftBreak => str.push(' '),
+            Inline::Str(x) => str.push_str(x),
+            Inline::Code(_, x) => str.push_str(x),
+            Inline::Math(_, x) => str.push_str(x),
+            Inline::RawInline(Format(format), raw)
+                if format == "html" && raw.starts_with("<br") =>
+            {
+                str.push(' ')
+            }
+            Inline::LineBreak => str.push('\n'),
+            Inline::Quoted(super::QuoteType::SingleQuote, inlines) => {
+                str.push('\u{2018}');
+                for inline in inlines {
+                    inline.stringify_to(str);
+                }
+                str.push('\u{2019}');
+            }
+            Inline::Quoted(super::QuoteType::DoubleQuote, inlines) => {
+                str.push('\u{201C}');
+                for inline in inlines {
+                    inline.stringify_to(str);
+                }
+                str.push('\u{201D}');
+            }
+            other => {
+                for inline in other.iter_inlines() {
+                    inline.stringify_to(str);
+                }
+            }
+        }
+    }
+}
+
+impl<T> Stringify for T
+where
+    for<'a> &'a T: IntoIterator<Item = &'a Inline>,
+{
+    fn stringify_to(&self, str: &mut String) {
+        for inline in self.into_iter() {
+            inline.stringify_to(str);
         }
     }
 }

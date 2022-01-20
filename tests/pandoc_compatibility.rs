@@ -5,7 +5,7 @@
 //!
 //! This requires that Pandoc be installed and on PATH.
 
-use pandoc_types::definition::Pandoc;
+use pandoc_types::definition::{Block, Pandoc, Stringify};
 use serde_json;
 
 use std::io::{self, Read, Write};
@@ -219,31 +219,15 @@ fn div() {
 }
 
 #[test]
-fn inline() {
-    check_roundtrip_stability(
+fn inline_roundtrip() {
+    check_roundtrip_stability(concat!(
+        include_str!("inlines.txt"),
         r#"
-str
-*emph*
-<u>underline</u>
-**strong**
-~~strikeout~~
-^superscript^
-~subscript~
-<span style="font-variant:small-caps;">caps</span>
-'single'
-"double"
-[see @cite]
-`code`
-line break: \
-$math$
-\rawlatex{something}
-[link](http://pandoc.org)
-![](image.png)
 [^footnote]
 
 [^footnote]: <span class="asdf">span</span>
 "#,
-    );
+    ));
 }
 
 #[test]
@@ -259,4 +243,16 @@ fn tables() {
 #[test]
 fn testsuite() {
     check_roundtrip_stability(include_str!("testsuite.txt"));
+}
+
+#[test]
+fn stringify() {
+    let json = pandoc_convert(include_str!("inlines.txt"), "markdown", "json").unwrap();
+    let Pandoc(_, blocks) = serde_json::from_str(&json).unwrap();
+    match &blocks[..] {
+        [Block::Para(inlines)] => {
+            assert_eq!(inlines.stringify(), "str emph underline strong strikeout superscript subscript caps ‘single’ “double” [see @cite] code line break:\nmath  link alt");
+        }
+        _ => panic!("expected inlines.txt to return only one Para"),
+    }
 }
