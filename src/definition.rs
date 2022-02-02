@@ -192,7 +192,7 @@ pub struct Row(pub Attr, pub Vec<Cell>);
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct TableHead(pub Attr, pub Vec<Row>);
 
-#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
 pub struct TableBody {
     pub attr: Attr,
     pub row_head_columns: i32,
@@ -203,7 +203,7 @@ pub struct TableBody {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct TableFoot(pub Attr, pub Vec<Row>);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct Caption(pub Option<Vec<Inline>>, pub Vec<Block>);
 
 #[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
@@ -213,6 +213,18 @@ pub struct Cell {
     pub row_span: i32,
     pub col_span: i32,
     pub content: Vec<Block>,
+}
+
+impl Default for Cell {
+    fn default() -> Self {
+        Self {
+            attr: Default::default(),
+            align: Default::default(),
+            row_span: 1,
+            col_span: 1,
+            content: Default::default(),
+        }
+    }
 }
 
 #[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
