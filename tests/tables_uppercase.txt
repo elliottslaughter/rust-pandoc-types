@@ -1,0 +1,169 @@
+SIMPLE TABLE WITH CAPTION:
+
+    RIGHT LEFT    CENTER  DEFAULT
+  ------- ------ -------- ---------
+       12 12        12    12
+      123 123      123    123
+        1 1         1     1
+
+  : DEMONSTRATION OF SIMPLE TABLE SYNTAX.
+
+SIMPLE TABLE WITHOUT CAPTION:
+
+    RIGHT LEFT    CENTER  DEFAULT
+  ------- ------ -------- ---------
+       12 12        12    12
+      123 123      123    123
+        1 1         1     1
+
+SIMPLE TABLE INDENTED TWO SPACES:
+
+    RIGHT LEFT    CENTER  DEFAULT
+  ------- ------ -------- ---------
+       12 12        12    12
+      123 123      123    123
+        1 1         1     1
+
+  : DEMONSTRATION OF SIMPLE TABLE SYNTAX.
+
+MULTILINE TABLE WITH CAPTION:
+
+  ---------------------------------------------------------------
+   CENTERED   LEFT              RIGHT DEFAULT ALIGNED
+    HEADER    ALIGNED         ALIGNED 
+  ----------- ---------- ------------ ---------------------------
+     FIRST    ROW                12.0 EXAMPLE OF A ROW THAT SPANS
+                                      MULTIPLE LINES.
+
+    SECOND    ROW                 5.0 HERE'S ANOTHER ONE. NOTE
+                                      THE BLANK LINE BETWEEN
+                                      ROWS.
+  ---------------------------------------------------------------
+
+  : HERE'S THE CAPTION. IT MAY SPAN MULTIPLE LINES.
+
+MULTILINE TABLE WITHOUT CAPTION:
+
+  ---------------------------------------------------------------
+   CENTERED   LEFT              RIGHT DEFAULT ALIGNED
+    HEADER    ALIGNED         ALIGNED 
+  ----------- ---------- ------------ ---------------------------
+     FIRST    ROW                12.0 EXAMPLE OF A ROW THAT SPANS
+                                      MULTIPLE LINES.
+
+    SECOND    ROW                 5.0 HERE'S ANOTHER ONE. NOTE
+                                      THE BLANK LINE BETWEEN
+                                      ROWS.
+  ---------------------------------------------------------------
+
+TABLE WITHOUT COLUMN HEADERS:
+
+  ----- ----- ----- -----
+     12 12     12      12
+    123 123    123    123
+      1 1       1       1
+  ----- ----- ----- -----
+
+MULTILINE TABLE WITHOUT COLUMN HEADERS:
+
+  ----------- ---------- ------------ ---------------------------
+     FIRST    ROW                12.0 EXAMPLE OF A ROW THAT SPANS
+                                      MULTIPLE LINES.
+
+    SECOND    ROW                 5.0 HERE'S ANOTHER ONE. NOTE
+                                      THE BLANK LINE BETWEEN
+                                      ROWS.
+  ----------- ---------- ------------ ---------------------------
+
+TABLE WITH COLUMN WIDTHS:
+
+```{=html}
+<table>
+```
+```{=html}
+<colgroup>
+```
+```{=html}
+<col width="11%">
+```
+```{=html}
+<col width="22%">
+```
+```{=html}
+</colgroup>
+```
+```{=html}
+<thead>
+```
+```{=html}
+<tr>
+```
+```{=html}
+<th>
+```
+FIRST
+```{=html}
+</th>
+```
+```{=html}
+<th>
+```
+SECOND
+```{=html}
+</th>
+```
+```{=html}
+</tr>
+```
+```{=html}
+</thead>
+```
+```{=html}
+<tbody>
+```
+```{=html}
+<tr>
+```
+```{=html}
+<td>
+```
+A
+```{=html}
+</td>
+```
+```{=html}
+<td>
+```
+B
+```{=html}
+</td>
+```
+```{=html}
+</tr>
+```
+```{=html}
+<tr>
+```
+```{=html}
+<td>
+```
+C
+```{=html}
+</td>
+```
+```{=html}
+<td>
+```
+D
+```{=html}
+</td>
+```
+```{=html}
+</tr>
+```
+```{=html}
+</tbody>
+```
+```{=html}
+</table>
+```
