@@ -101,19 +101,22 @@ pub enum Block {
     Header(i32, Attr, Vec<Inline>),
     /// Horizontal rule
     HorizontalRule,
-    /// Table, with attributes, caption, optional short caption, column alignments and widths (required), table head, table bodies, and table foot
-    Table(
-        Attr,
-        Caption,
-        Vec<ColSpec>,
-        TableHead,
-        Vec<TableBody>,
-        TableFoot,
-    ),
+    /// Table
+    Table(Table),
     /// Generic block container with attributes
     Div(Attr, Vec<Block>),
     /// Nothing
     Null,
+}
+
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct Table {
+    pub attr: Attr,
+    pub caption: Caption,
+    pub colspecs: Vec<ColSpec>,
+    pub head: TableHead,
+    pub bodies: Vec<TableBody>,
+    pub foot: TableFoot,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -192,11 +195,17 @@ impl Default for ColWidth {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct ColSpec(pub Alignment, pub ColWidth);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Row(pub Attr, pub Vec<Cell>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
+pub struct Row {
+    pub attr: Attr,
+    pub cells: Vec<Cell>,
+}
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct TableHead(pub Attr, pub Vec<Row>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct TableHead {
+    pub attr: Attr,
+    pub rows: Vec<Row>,
+}
 
 #[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
 pub struct TableBody {
@@ -206,11 +215,17 @@ pub struct TableBody {
     pub body: Vec<Row>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct TableFoot(pub Attr, pub Vec<Row>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct TableFoot {
+    pub attr: Attr,
+    pub rows: Vec<Row>,
+}
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
-pub struct Caption(pub Option<Vec<Inline>>, pub Vec<Block>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct Caption {
+    pub short: Option<Vec<Inline>>,
+    pub long: Vec<Block>,
+}
 
 #[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
 pub struct Cell {

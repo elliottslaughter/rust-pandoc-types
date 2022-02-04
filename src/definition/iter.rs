@@ -1,4 +1,4 @@
-use super::{Block, Caption, Format, Inline, Pandoc, Row, TableFoot, TableHead};
+use super::{Block, Caption, Format, Inline, Pandoc, Row, Table};
 
 /// A trait to iterate over the immediately contained blocks in a type.
 pub trait IterBlocks<'a> {
@@ -40,28 +40,7 @@ impl<'a> IterBlocks<'a> for Block {
                     .map(|(_dt, dd)| dd.iter().flatten())
                     .flatten(),
             ),
-            Block::Table(
-                _,
-                Caption(_, caption_blocks),
-                _,
-                TableHead(_, thead_rows),
-                tbody,
-                TableFoot(_, tfoot_rows),
-            ) => IterTypes::Table(
-                caption_blocks.iter().chain(
-                    thead_rows
-                        .iter()
-                        .chain(
-                            tbody
-                                .iter()
-                                .flat_map(|b| b.head.iter().chain(b.body.iter()))
-                                .chain(tfoot_rows.iter()),
-                        )
-                        .flat_map(|Row(_, cells)| {
-                            cells.iter().flat_map(|cell| cell.content.iter())
-                        }),
-                ),
-            ),
+            Block::Table(table) => IterTypes::Table(table.iter_blocks()),
             Block::Plain(_) => IterTypes::Empty,
             Block::Para(_) => IterTypes::Empty,
             Block::LineBlock(_) => IterTypes::Empty,
@@ -85,28 +64,7 @@ impl<'a> IterBlocks<'a> for Block {
                     .map(|(_dt, dd)| dd.iter_mut().flatten())
                     .flatten(),
             ),
-            Block::Table(
-                _,
-                Caption(_, caption_blocks),
-                _,
-                TableHead(_, thead_rows),
-                tbody,
-                TableFoot(_, tfoot_rows),
-            ) => IterTypes::Table(
-                caption_blocks.iter_mut().chain(
-                    thead_rows
-                        .iter_mut()
-                        .chain(
-                            tbody
-                                .iter_mut()
-                                .flat_map(|b| b.head.iter_mut().chain(b.body.iter_mut()))
-                                .chain(tfoot_rows.iter_mut()),
-                        )
-                        .flat_map(|Row(_, cells)| {
-                            cells.iter_mut().flat_map(|cell| cell.content.iter_mut())
-                        }),
-                ),
-            ),
+            Block::Table(table) => IterTypes::Table(table.iter_blocks_mut()),
             Block::Plain(_) => IterTypes::Empty,
             Block::Para(_) => IterTypes::Empty,
             Block::LineBlock(_) => IterTypes::Empty,
@@ -116,6 +74,49 @@ impl<'a> IterBlocks<'a> for Block {
             Block::HorizontalRule => IterTypes::Empty,
             Block::Null => IterTypes::Empty,
         })
+    }
+}
+
+impl<'a> IterBlocks<'a> for Table {
+    type Iter = Box<dyn Iterator<Item = &'a Block> + 'a>;
+    type IterMut = Box<dyn Iterator<Item = &'a mut Block> + 'a>;
+
+    fn iter_blocks(&'a self) -> Self::Iter {
+        Box::new(
+            self.caption.long.iter().chain(
+                self.head
+                    .rows
+                    .iter()
+                    .chain(
+                        self.bodies
+                            .iter()
+                            .flat_map(|b| b.head.iter().chain(b.body.iter()))
+                            .chain(self.foot.rows.iter()),
+                    )
+                    .flat_map(|Row { cells, .. }| {
+                        cells.iter().flat_map(|cell| cell.content.iter())
+                    }),
+            ),
+        )
+    }
+
+    fn iter_blocks_mut(&'a mut self) -> Self::IterMut {
+        Box::new(
+            self.caption.long.iter_mut().chain(
+                self.head
+                    .rows
+                    .iter_mut()
+                    .chain(
+                        self.bodies
+                            .iter_mut()
+                            .flat_map(|b| b.head.iter_mut().chain(b.body.iter_mut()))
+                            .chain(self.foot.rows.iter_mut()),
+                    )
+                    .flat_map(|Row { cells, .. }| {
+                        cells.iter_mut().flat_map(|cell| cell.content.iter_mut())
+                    }),
+            ),
+        )
     }
 }
 
@@ -165,9 +166,10 @@ impl<'a> IterInlines<'a> for Block {
                 IterTypes::FlatMap(definitions.iter().flat_map(|(dt, _)| dt))
             }
             Block::Header(_, _, inlines) => IterTypes::Iter(inlines.iter()),
-            Block::Table(_, Caption(inlines_opt, _), _, _, _, _) => {
-                IterTypes::Table(inlines_opt.iter().flatten())
-            }
+            Block::Table(Table {
+                caption: Caption { short, .. },
+                ..
+            }) => IterTypes::Table(short.iter().flatten()),
             Block::CodeBlock(_, _) => IterTypes::Empty,
             Block::RawBlock(_, _) => IterTypes::Empty,
             Block::BlockQuote(_) => IterTypes::Empty,
@@ -188,9 +190,10 @@ impl<'a> IterInlines<'a> for Block {
                 IterTypes::FlatMap(definitions.iter_mut().flat_map(|(dt, _)| dt))
             }
             Block::Header(_, _, inlines) => IterTypes::Iter(inlines.iter_mut()),
-            Block::Table(_, Caption(inlines_opt, _), _, _, _, _) => {
-                IterTypes::Table(inlines_opt.iter_mut().flatten())
-            }
+            Block::Table(Table {
+                caption: Caption { short, .. },
+                ..
+            }) => IterTypes::Table(short.iter_mut().flatten()),
             Block::CodeBlock(_, _) => IterTypes::Empty,
             Block::RawBlock(_, _) => IterTypes::Empty,
             Block::BlockQuote(_) => IterTypes::Empty,

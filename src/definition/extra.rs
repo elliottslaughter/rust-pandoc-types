@@ -64,7 +64,7 @@ impl From<&Block> for BlockType {
             Block::DefinitionList(_) => Self::DefinitionList,
             Block::Header(_, _, _) => Self::Header,
             Block::HorizontalRule => Self::HorizontalRule,
-            Block::Table(_, _, _, _, _, _) => Self::Table,
+            Block::Table(_) => Self::Table,
             Block::Div(_, _) => Self::Div,
             Block::Null => Self::Null,
         }
