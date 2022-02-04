@@ -11,9 +11,9 @@ fn main() {
         MetaValue::MetaInlines(vec![Inline::Str("a".to_owned())]),
     );
 
-    let doc = Pandoc(
+    let doc = Pandoc {
         meta,
-        vec![
+        blocks: vec![
             Block::Header(
                 1,
                 Attr {
@@ -25,7 +25,7 @@ fn main() {
             ),
             Block::Para(vec![Inline::Str("b".to_owned())]),
         ],
-    );
+    };
 
     let s = serde_json::to_string(&doc).unwrap();
     println!("serialized = {}", s);

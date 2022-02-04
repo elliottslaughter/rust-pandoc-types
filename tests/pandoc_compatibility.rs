@@ -247,8 +247,8 @@ fn testsuite() {
 #[test]
 fn stringify() {
     let json = pandoc_convert(include_str!("inlines.txt"), "markdown", "json").unwrap();
-    let Pandoc(_, blocks) = serde_json::from_str(&json).unwrap();
-    match &blocks[..] {
+    let pandoc: Pandoc = serde_json::from_str(&json).unwrap();
+    match &pandoc.blocks[..] {
         [Block::Para(inlines)] => {
             assert_eq!(inlines.stringify(), "str emph underline strong strikeout superscript subscript caps ‘single’ “double” [see @cite] code line break:\nmath  link alt");
         }
@@ -277,7 +277,7 @@ fn make_inlines_uppercase<'a>(inlines: impl Iterator<Item = &'a mut Inline>) {
 fn iter_mut_blocks() {
     let json = pandoc_convert(include_str!("testsuite.txt"), "markdown", "json").unwrap();
     let mut doc: Pandoc = serde_json::from_str(&json).unwrap();
-    make_blocks_uppercase(doc.1.iter_mut());
+    make_blocks_uppercase(doc.blocks.iter_mut());
     let json = serde_json::to_string(&doc).unwrap();
     let markdown = pandoc_convert(&json, "json", "markdown").unwrap();
     assert_eq!(markdown, include_str!("testsuite_uppercase.txt"));
@@ -287,7 +287,7 @@ fn iter_mut_blocks() {
 fn iter_mut_tables() {
     let json = pandoc_convert(include_str!("tables.txt"), "markdown", "json").unwrap();
     let mut doc: Pandoc = serde_json::from_str(&json).unwrap();
-    make_blocks_uppercase(doc.1.iter_mut());
+    make_blocks_uppercase(doc.blocks.iter_mut());
     let json = serde_json::to_string(&doc).unwrap();
     let markdown = pandoc_convert(&json, "json", "markdown").unwrap();
     assert_eq!(markdown, include_str!("tables_uppercase.txt"));

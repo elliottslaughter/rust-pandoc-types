@@ -13,8 +13,11 @@ mod iter;
 
 const PANDOC_API_VERSION: [i32; 2] = [1, 22];
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct Pandoc(pub HashMap<String, MetaValue>, pub Vec<Block>);
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct Pandoc {
+    pub blocks: Vec<Block>,
+    pub meta: HashMap<String, MetaValue>,
+}
 
 impl Serialize for Pandoc {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -23,8 +26,8 @@ impl Serialize for Pandoc {
     {
         let mut value = serializer.serialize_struct("Pandoc", 3)?;
         value.serialize_field("pandoc-api-version", &PANDOC_API_VERSION)?;
-        value.serialize_field("meta", &self.0)?;
-        value.serialize_field("blocks", &self.1)?;
+        value.serialize_field("meta", &self.meta)?;
+        value.serialize_field("blocks", &self.blocks)?;
         value.end()
     }
 }
@@ -55,7 +58,10 @@ impl<'a> Deserialize<'a> for Pandoc {
             )));
         }
 
-        Ok(Pandoc(value.meta, value.blocks))
+        Ok(Pandoc {
+            meta: value.meta,
+            blocks: value.blocks,
+        })
     }
 }
 

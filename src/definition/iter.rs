@@ -144,11 +144,11 @@ impl<'a> IterBlocks<'a> for Pandoc {
     type IterMut = std::slice::IterMut<'a, Block>;
 
     fn iter_blocks(&'a self) -> Self::Iter {
-        self.1.iter()
+        self.blocks.iter()
     }
 
     fn iter_blocks_mut(&'a mut self) -> Self::IterMut {
-        self.1.iter_mut()
+        self.blocks.iter_mut()
     }
 }
 
