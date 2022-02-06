@@ -1,13 +1,23 @@
+//! This module contatins the types from [Text.Pandoc.Definition] ported to Rust.
+//!
+//! [Text.Pandoc.Definition]: https://hackage.haskell.org/package/pandoc-types/docs/Text-Pandoc-Definition.html
 use std::collections::HashMap;
 
+pub use iter::*;
 use serde::ser::SerializeStruct;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde_tuple::{Deserialize_tuple, Serialize_tuple};
 
+pub mod extra;
+mod iter;
+
 const PANDOC_API_VERSION: [i32; 2] = [1, 22];
 
-#[derive(Debug, Clone, PartialEq)]
-pub struct Pandoc(pub HashMap<String, MetaValue>, pub Vec<Block>);
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct Pandoc {
+    pub blocks: Vec<Block>,
+    pub meta: HashMap<String, MetaValue>,
+}
 
 impl Serialize for Pandoc {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -16,8 +26,8 @@ impl Serialize for Pandoc {
     {
         let mut value = serializer.serialize_struct("Pandoc", 3)?;
         value.serialize_field("pandoc-api-version", &PANDOC_API_VERSION)?;
-        value.serialize_field("meta", &self.0)?;
-        value.serialize_field("blocks", &self.1)?;
+        value.serialize_field("meta", &self.meta)?;
+        value.serialize_field("blocks", &self.blocks)?;
         value.end()
     }
 }
@@ -48,7 +58,10 @@ impl<'a> Deserialize<'a> for Pandoc {
             )));
         }
 
-        Ok(Pandoc(value.meta, value.blocks))
+        Ok(Pandoc {
+            meta: value.meta,
+            blocks: value.blocks,
+        })
     }
 }
 
@@ -88,19 +101,22 @@ pub enum Block {
     Header(i32, Attr, Vec<Inline>),
     /// Horizontal rule
     HorizontalRule,
-    /// Table, with attributes, caption, optional short caption, column alignments and widths (required), table head, table bodies, and table foot
-    Table(
-        Attr,
-        Caption,
-        Vec<ColSpec>,
-        TableHead,
-        Vec<TableBody>,
-        TableFoot,
-    ),
+    /// Table
+    Table(Table),
     /// Generic block container with attributes
     Div(Attr, Vec<Block>),
     /// Nothing
     Null,
+}
+
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct Table {
+    pub attr: Attr,
+    pub caption: Caption,
+    pub colspecs: Vec<ColSpec>,
+    pub head: TableHead,
+    pub bodies: Vec<TableBody>,
+    pub foot: TableFoot,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -179,13 +195,19 @@ impl Default for ColWidth {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Default)]
 pub struct ColSpec(pub Alignment, pub ColWidth);
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Row(pub Attr, pub Vec<Cell>);
-
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct TableHead(pub Attr, pub Vec<Row>);
-
 #[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
+pub struct Row {
+    pub attr: Attr,
+    pub cells: Vec<Cell>,
+}
+
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct TableHead {
+    pub attr: Attr,
+    pub rows: Vec<Row>,
+}
+
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
 pub struct TableBody {
     pub attr: Attr,
     pub row_head_columns: i32,
@@ -193,11 +215,17 @@ pub struct TableBody {
     pub body: Vec<Row>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct TableFoot(pub Attr, pub Vec<Row>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct TableFoot {
+    pub attr: Attr,
+    pub rows: Vec<Row>,
+}
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-pub struct Caption(pub Option<Vec<Inline>>, pub Vec<Block>);
+#[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq, Default)]
+pub struct Caption {
+    pub short: Option<Vec<Inline>>,
+    pub long: Vec<Block>,
+}
 
 #[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]
 pub struct Cell {
@@ -206,6 +234,18 @@ pub struct Cell {
     pub row_span: i32,
     pub col_span: i32,
     pub content: Vec<Block>,
+}
+
+impl Default for Cell {
+    fn default() -> Self {
+        Self {
+            attr: Default::default(),
+            align: Default::default(),
+            row_span: 1,
+            col_span: 1,
+            content: Default::default(),
+        }
+    }
 }
 
 #[derive(Serialize_tuple, Deserialize_tuple, Debug, Clone, PartialEq)]

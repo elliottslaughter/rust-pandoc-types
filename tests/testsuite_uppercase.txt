@@ -1,0 +1,767 @@
+---
+author:
+- John MacFarlane
+- Anonymous
+date: July 17, 2006
+title: Pandoc Test Suite
+---
+
+THIS IS A SET OF TESTS FOR PANDOC. MOST OF THEM ARE ADAPTED FROM JOHN
+GRUBER'S MARKDOWN TEST SUITE.
+
+------------------------------------------------------------------------
+
+# HEADERS
+
+## LEVEL 2 WITH AN [EMBEDDED LINK](/url)
+
+### LEVEL 3 WITH *EMPHASIS*
+
+#### LEVEL 4
+
+##### LEVEL 5
+
+# LEVEL 1
+
+## LEVEL 2 WITH *EMPHASIS*
+
+### LEVEL 3
+
+WITH NO BLANK LINE
+
+## LEVEL 2
+
+WITH NO BLANK LINE
+
+------------------------------------------------------------------------
+
+# PARAGRAPHS
+
+HERE'S A REGULAR PARAGRAPH.
+
+IN MARKDOWN 1.0.0 AND EARLIER. VERSION 8. THIS LINE TURNS INTO A LIST
+ITEM. BECAUSE A HARD-WRAPPED LINE IN THE MIDDLE OF A PARAGRAPH LOOKED
+LIKE A LIST ITEM.
+
+HERE'S ONE WITH A BULLET. \* CRIMINEY.
+
+THERE SHOULD BE A HARD LINE BREAK\
+HERE.
+
+------------------------------------------------------------------------
+
+# BLOCK QUOTES
+
+E-MAIL STYLE:
+
+> THIS IS A BLOCK QUOTE. IT IS PRETTY SHORT.
+
+> CODE IN A BLOCK QUOTE:
+>
+>     sub status {
+>         print "working";
+>     }
+>
+> A LIST:
+>
+> 1.  ITEM ONE
+> 2.  ITEM TWO
+>
+> NESTED BLOCK QUOTES:
+>
+> > NESTED
+>
+> > NESTED
+
+THIS SHOULD NOT BE A BLOCK QUOTE: 2 \> 1.
+
+AND A FOLLOWING PARAGRAPH.
+
+------------------------------------------------------------------------
+
+# CODE BLOCKS
+
+CODE:
+
+    ---- (should be four hyphens)
+
+    sub status {
+        print "working";
+    }
+
+    this code block is indented by one tab
+
+AND:
+
+        this code block is indented by two tabs
+
+    These should not be escaped:  \$ \\ \> \[ \{
+
+------------------------------------------------------------------------
+
+# LISTS
+
+## UNORDERED
+
+ASTERISKS TIGHT:
+
+-   ASTERISK 1
+-   ASTERISK 2
+-   ASTERISK 3
+
+ASTERISKS LOOSE:
+
+-   ASTERISK 1
+
+-   ASTERISK 2
+
+-   ASTERISK 3
+
+PLUSES TIGHT:
+
+-   PLUS 1
+-   PLUS 2
+-   PLUS 3
+
+PLUSES LOOSE:
+
+-   PLUS 1
+
+-   PLUS 2
+
+-   PLUS 3
+
+MINUSES TIGHT:
+
+-   MINUS 1
+-   MINUS 2
+-   MINUS 3
+
+MINUSES LOOSE:
+
+-   MINUS 1
+
+-   MINUS 2
+
+-   MINUS 3
+
+## ORDERED
+
+TIGHT:
+
+1.  FIRST
+2.  SECOND
+3.  THIRD
+
+AND:
+
+1.  ONE
+2.  TWO
+3.  THREE
+
+LOOSE USING TABS:
+
+1.  FIRST
+
+2.  SECOND
+
+3.  THIRD
+
+AND USING SPACES:
+
+1.  ONE
+
+2.  TWO
+
+3.  THREE
+
+MULTIPLE PARAGRAPHS:
+
+1.  ITEM 1, GRAF ONE.
+
+    ITEM 1. GRAF TWO. THE QUICK BROWN FOX JUMPED OVER THE LAZY DOG'S
+    BACK.
+
+2.  ITEM 2.
+
+3.  ITEM 3.
+
+## NESTED
+
+-   TAB
+    -   TAB
+        -   TAB
+
+HERE'S ANOTHER:
+
+1.  FIRST
+2.  SECOND:
+    -   FEE
+    -   FIE
+    -   FOE
+3.  THIRD
+
+SAME THING BUT WITH PARAGRAPHS:
+
+1.  FIRST
+
+2.  SECOND:
+
+    -   FEE
+    -   FIE
+    -   FOE
+
+3.  THIRD
+
+## TABS AND SPACES
+
+-   THIS IS A LIST ITEM INDENTED WITH TABS
+
+-   THIS IS A LIST ITEM INDENTED WITH SPACES
+
+    -   THIS IS AN EXAMPLE LIST ITEM INDENTED WITH TABS
+
+    -   THIS IS AN EXAMPLE LIST ITEM INDENTED WITH SPACES
+
+## FANCY LIST MARKERS
+
+(2) BEGINS WITH 2
+
+(3) AND NOW 3
+
+    WITH A CONTINUATION
+
+    iv. SUBLIST WITH ROMAN NUMERALS, STARTING WITH 4
+    v.  MORE ITEMS
+        (A) A SUBSUBLIST
+        (B) A SUBSUBLIST
+
+NESTING:
+
+A.  UPPER ALPHA
+    I.  UPPER ROMAN.
+        (6) DECIMAL START WITH 6
+            c)  LOWER ALPHA WITH PAREN
+
+AUTONUMBERING:
+
+1.  AUTONUMBER.
+2.  MORE.
+    1.  NESTED.
+
+SHOULD NOT BE A LIST ITEM:
+
+M.A. 2007
+
+B. WILLIAMS
+
+------------------------------------------------------------------------
+
+# DEFINITION LISTS
+
+TIGHT USING SPACES:
+
+APPLE
+:   RED FRUIT
+
+ORANGE
+:   ORANGE FRUIT
+
+BANANA
+:   YELLOW FRUIT
+
+TIGHT USING TABS:
+
+APPLE
+:   RED FRUIT
+
+ORANGE
+:   ORANGE FRUIT
+
+BANANA
+:   YELLOW FRUIT
+
+LOOSE:
+
+APPLE
+
+:   RED FRUIT
+
+ORANGE
+
+:   ORANGE FRUIT
+
+BANANA
+
+:   YELLOW FRUIT
+
+MULTIPLE BLOCKS WITH ITALICS:
+
+*APPLE*
+
+:   RED FRUIT
+
+    CONTAINS SEEDS, CRISP, PLEASANT TO TASTE
+
+*ORANGE*
+
+:   ORANGE FRUIT
+
+        { orange code block }
+
+    > ORANGE BLOCK QUOTE
+
+MULTIPLE DEFINITIONS, TIGHT:
+
+APPLE
+:   RED FRUIT
+:   COMPUTER
+
+ORANGE
+:   ORANGE FRUIT
+:   BANK
+
+MULTIPLE DEFINITIONS, LOOSE:
+
+APPLE
+
+:   RED FRUIT
+
+:   COMPUTER
+
+ORANGE
+
+:   ORANGE FRUIT
+
+:   BANK
+
+BLANK LINE AFTER TERM, INDENTED MARKER, ALTERNATE MARKERS:
+
+APPLE
+
+:   RED FRUIT
+
+:   COMPUTER
+
+ORANGE
+
+:   ORANGE FRUIT
+
+    1.  SUBLIST
+    2.  SUBLIST
+
+# HTML BLOCKS
+
+SIMPLE BLOCK ON ONE LINE:
+
+<div>
+
+FOO
+
+</div>
+
+AND NESTED WITHOUT INDENTATION:
+
+<div>
+
+<div>
+
+<div>
+
+FOO
+
+</div>
+
+</div>
+
+<div>
+
+BAR
+
+</div>
+
+</div>
+
+INTERPRETED MARKDOWN IN A TABLE:
+
+```{=html}
+<table>
+```
+```{=html}
+<tr>
+```
+```{=html}
+<td>
+```
+THIS IS *EMPHASIZED*
+```{=html}
+</td>
+```
+```{=html}
+<td>
+```
+AND THIS IS **STRONG**
+```{=html}
+</td>
+```
+```{=html}
+</tr>
+```
+```{=html}
+</table>
+```
+```{=html}
+<script type="text/javascript">document.write('This *should not* be interpreted as markdown');</script>
+```
+HERE'S A SIMPLE BLOCK:
+
+<div>
+
+FOO
+
+</div>
+
+THIS SHOULD BE A CODE BLOCK, THOUGH:
+
+    <div>
+        foo
+    </div>
+
+AS SHOULD THIS:
+
+    <div>foo</div>
+
+NOW, NESTED:
+
+<div>
+
+<div>
+
+<div>
+
+FOO
+
+</div>
+
+</div>
+
+</div>
+
+THIS SHOULD JUST BE AN HTML COMMENT:
+
+```{=html}
+<!-- Comment -->
+```
+MULTILINE:
+
+```{=html}
+<!--
+Blah
+Blah
+-->
+```
+```{=html}
+<!--
+    This is another comment.
+-->
+```
+CODE BLOCK:
+
+    <!-- Comment -->
+
+JUST PLAIN COMMENT, WITH TRAILING SPACES ON THE LINE:
+
+```{=html}
+<!-- foo -->
+```
+CODE:
+
+    <hr />
+
+HR'S:
+
+```{=html}
+<hr>
+```
+```{=html}
+<hr />
+```
+```{=html}
+<hr />
+```
+```{=html}
+<hr>
+```
+```{=html}
+<hr />
+```
+```{=html}
+<hr />
+```
+```{=html}
+<hr class="foo" id="bar" />
+```
+```{=html}
+<hr class="foo" id="bar" />
+```
+```{=html}
+<hr class="foo" id="bar">
+```
+
+------------------------------------------------------------------------
+
+# INLINE MARKUP
+
+THIS IS *EMPHASIZED*, AND SO *IS THIS*.
+
+THIS IS **STRONG**, AND SO **IS THIS**.
+
+AN *[EMPHASIZED LINK](/url)*.
+
+***THIS IS STRONG AND EM.***
+
+SO IS ***THIS*** WORD.
+
+***THIS IS STRONG AND EM.***
+
+SO IS ***THIS*** WORD.
+
+THIS IS CODE: `>`, `$`, `\`, `\$`, `<html>`.
+
+~~THIS IS *STRIKEOUT*.~~
+
+SUPERSCRIPTS: A^BC^D A^*HELLO*^ A^HELLO THERE^.
+
+SUBSCRIPTS: H~2~O, H~23~O, H~MANY OF THEM~O.
+
+THESE SHOULD NOT BE SUPERSCRIPTS OR SUBSCRIPTS, BECAUSE OF THE UNESCAPED
+SPACES: A\^B C\^D, A\~B C\~D.
+
+------------------------------------------------------------------------
+
+# SMART QUOTES, ELLIPSES, DASHES
+
+"HELLO," SAID THE SPIDER. "'SHELOB' IS MY NAME."
+
+'A', 'B', AND 'C' ARE LETTERS.
+
+'OAK,' 'ELM,' AND 'BEECH' ARE NAMES OF TREES. SO IS 'PINE.'
+
+'HE SAID, "I WANT TO GO."' WERE YOU ALIVE IN THE 70'S?
+
+HERE IS SOME QUOTED '`code`' AND A "[QUOTED
+LINK](http://example.com/?foo=1&bar=2)".
+
+SOME DASHES: ONE---TWO --- THREE---FOUR --- FIVE.
+
+DASHES BETWEEN NUMBERS: 5--7, 255--66, 1987--1999.
+
+ELLIPSES...AND...AND....
+
+------------------------------------------------------------------------
+
+# LATEX
+
+-   `\cite[22-23]{smith.1899}`{=tex}
+-   $2+2=4$
+-   $x \in y$
+-   $\alpha \wedge \omega$
+-   $223$
+-   $p$-TREE
+-   HERE'S SOME DISPLAY MATH:
+    $$\frac{d}{dx}f(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}$$
+-   HERE'S ONE THAT HAS A LINE BREAK IN IT:
+    $\alpha + \omega \times x^2$.
+
+THESE SHOULDN'T BE MATH:
+
+-   TO GET THE FAMOUS EQUATION, WRITE `$e = mc^2$`.
+-   \$22,000 IS A *LOT* OF MONEY. SO IS \$34,000. (IT WORKED IF "LOT" IS
+    EMPHASIZED.)
+-   SHOES (\$20) AND SOCKS (\$5).
+-   ESCAPED `$`: \$73 *THIS SHOULD BE EMPHASIZED* 23\$.
+
+HERE'S A LATEX TABLE:
+
+```{=tex}
+\begin{tabular}{|l|l|}\hline
+Animal & Number \\ \hline
+Dog    & 2      \\
+Cat    & 1      \\ \hline
+\end{tabular}
+```
+
+------------------------------------------------------------------------
+
+# SPECIAL CHARACTERS
+
+HERE IS SOME UNICODE:
+
+-   I HAT: Î
+-   O UMLAUT: Ö
+-   SECTION: §
+-   SET MEMBERSHIP: ∈
+-   COPYRIGHT: ©
+
+AT&T HAS AN AMPERSAND IN THEIR NAME.
+
+AT&T IS ANOTHER WAY TO WRITE IT.
+
+THIS & THAT.
+
+4 \< 5.
+
+6 \> 5.
+
+BACKSLASH: \\
+
+BACKTICK: \`
+
+ASTERISK: \*
+
+UNDERSCORE: \_
+
+LEFT BRACE: {
+
+RIGHT BRACE: }
+
+LEFT BRACKET: \[
+
+RIGHT BRACKET: \]
+
+LEFT PAREN: (
+
+RIGHT PAREN: )
+
+GREATER-THAN: \>
+
+HASH: \#
+
+PERIOD: .
+
+BANG: !
+
+PLUS: +
+
+MINUS: -
+
+------------------------------------------------------------------------
+
+# LINKS
+
+## EXPLICIT
+
+JUST A [URL](/url/).
+
+[URL AND TITLE](/url/ "title").
+
+[URL AND TITLE](/url/ "title preceded by two spaces").
+
+[URL AND TITLE](/url/ "title preceded by a tab").
+
+[URL AND TITLE](/url/ "title with "quotes" in it")
+
+[URL AND TITLE](/url/ "title with single quotes")
+
+[WITH_UNDERSCORE](/url/with_underscore)
+
+[EMAIL LINK](mailto:nobody@nowhere.net)
+
+[EMPTY]().
+
+## REFERENCE
+
+FOO [BAR](/url/).
+
+WITH [EMBEDDED \[BRACKETS\]](/url/).
+
+[B](/url/) BY ITSELF SHOULD BE A LINK.
+
+INDENTED [ONCE](/url).
+
+INDENTED [TWICE](/url).
+
+INDENTED [THRICE](/url).
+
+THIS SHOULD \[NOT\]\[\] BE A LINK.
+
+    [not]: /url
+
+FOO [BAR](/url/ "Title with "quotes" inside").
+
+FOO [BIZ](/url/ "Title with "quote" inside").
+
+## WITH AMPERSANDS
+
+HERE'S A [LINK WITH AN AMPERSAND IN THE
+URL](http://example.com/?foo=1&bar=2).
+
+HERE'S A LINK WITH AN AMERSAND IN THE LINK TEXT:
+[AT&T](http://att.com/ "AT&T").
+
+HERE'S AN [INLINE LINK](/script?foo=1&bar=2).
+
+HERE'S AN [INLINE LINK IN POINTY BRACES](/script?foo=1&bar=2).
+
+## AUTOLINKS
+
+WITH AN AMPERSAND:
+[HTTP://EXAMPLE.COM/?FOO=1&BAR=2](http://example.com/?foo=1&bar=2){.uri}
+
+-   IN A LIST?
+-   [HTTP://EXAMPLE.COM/](http://example.com/){.uri}
+-   IT SHOULD.
+
+AN E-MAIL ADDRESS:
+[NOBODY@NOWHERE.NET](mailto:nobody@nowhere.net){.email}
+
+> BLOCKQUOTED: [HTTP://EXAMPLE.COM/](http://example.com/){.uri}
+
+AUTO-LINKS SHOULD NOT OCCUR HERE: `<http://example.com/>`
+
+    or here: <http://example.com/>
+
+------------------------------------------------------------------------
+
+# IMAGES
+
+FROM "VOYAGE DANS LA LUNE" BY GEORGES MELIES (1902):
+
+![LALUNE](lalune.jpg "Voyage dans la Lune")
+
+HERE IS A MOVIE ![MOVIE](movie.jpg) ICON.
+
+------------------------------------------------------------------------
+
+# FOOTNOTES
+
+HERE IS A FOOTNOTE REFERENCE,[^1] AND ANOTHER.[^2] THIS SHOULD *NOT* BE
+A FOOTNOTE REFERENCE, BECAUSE IT CONTAINS A SPACE.\[\^MY NOTE\] HERE IS
+AN INLINE NOTE.[^3]
+
+> NOTES CAN GO IN QUOTES.[^4]
+
+1.  AND IN LIST ITEMS.[^5]
+
+THIS PARAGRAPH SHOULD NOT BE PART OF THE NOTE, AS IT IS NOT INDENTED.
+
+[^1]: HERE IS THE FOOTNOTE. IT CAN GO ANYWHERE AFTER THE FOOTNOTE
+    REFERENCE. IT NEED NOT BE PLACED AT THE END OF THE DOCUMENT.
+
+[^2]: HERE'S THE LONG NOTE. THIS ONE CONTAINS MULTIPLE BLOCKS.
+
+    SUBSEQUENT BLOCKS ARE INDENTED TO SHOW THAT THEY BELONG TO THE
+    FOOTNOTE (AS WITH LIST ITEMS).
+
+          { <code> }
+
+    IF YOU WANT, YOU CAN INDENT EVERY LINE, BUT YOU CAN ALSO BE LAZY AND
+    JUST INDENT THE FIRST LINE OF EACH BLOCK.
+
+[^3]: THIS IS *EASIER* TO TYPE. INLINE NOTES MAY CONTAIN
+    [LINKS](http://google.com) AND `]` VERBATIM CHARACTERS, AS WELL AS
+    \[BRACKETED TEXT\].
+
+[^4]: IN QUOTE.
+
+[^5]: IN LIST.

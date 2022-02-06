@@ -1,0 +1,17 @@
+str
+*emph*
+<u>underline</u>
+**strong**
+~~strikeout~~
+^superscript^
+~subscript~
+<span style="font-variant:small-caps;">caps</span>
+'single'
+"double"
+[see @cite]
+`code`
+line break: \
+$math$
+\rawlatex{something}
+[link](http://pandoc.org)
+![alt](image.png)

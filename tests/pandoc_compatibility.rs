@@ -5,8 +5,7 @@
 //!
 //! This requires that Pandoc be installed and on PATH.
 
-use pandoc_types::definition::Pandoc;
-use serde_json;
+use pandoc_types::definition::{Block, Inline, IterBlocks, IterInlines, Pandoc, Stringify};
 
 use std::io::{self, Read, Write};
 use std::process::{Command, Stdio};
@@ -219,31 +218,15 @@ fn div() {
 }
 
 #[test]
-fn inline() {
-    check_roundtrip_stability(
+fn inline_roundtrip() {
+    check_roundtrip_stability(concat!(
+        include_str!("inlines.txt"),
         r#"
-str
-*emph*
-<u>underline</u>
-**strong**
-~~strikeout~~
-^superscript^
-~subscript~
-<span style="font-variant:small-caps;">caps</span>
-'single'
-"double"
-[see @cite]
-`code`
-line break: \
-$math$
-\rawlatex{something}
-[link](http://pandoc.org)
-![](image.png)
 [^footnote]
 
 [^footnote]: <span class="asdf">span</span>
 "#,
-    );
+    ));
 }
 
 #[test]
@@ -259,4 +242,53 @@ fn tables() {
 #[test]
 fn testsuite() {
     check_roundtrip_stability(include_str!("testsuite.txt"));
+}
+
+#[test]
+fn stringify() {
+    let json = pandoc_convert(include_str!("inlines.txt"), "markdown", "json").unwrap();
+    let pandoc: Pandoc = serde_json::from_str(&json).unwrap();
+    match &pandoc.blocks[..] {
+        [Block::Para(inlines)] => {
+            assert_eq!(inlines.stringify(), "str emph underline strong strikeout superscript subscript caps ‘single’ “double” [see @cite] code line break:\nmath  link alt");
+        }
+        _ => panic!("expected inlines.txt to return only one Para"),
+    }
+}
+
+fn make_blocks_uppercase<'a>(blocks: impl Iterator<Item = &'a mut Block>) {
+    for block in blocks {
+        make_blocks_uppercase(block.iter_blocks_mut());
+        make_inlines_uppercase(block.iter_inlines_mut());
+    }
+}
+
+fn make_inlines_uppercase<'a>(inlines: impl Iterator<Item = &'a mut Inline>) {
+    for inline in inlines {
+        if let Inline::Str(text) = inline {
+            *text = text.to_uppercase()
+        }
+        make_inlines_uppercase(inline.iter_inlines_mut());
+        make_blocks_uppercase(inline.iter_blocks_mut());
+    }
+}
+
+#[test]
+fn iter_mut_blocks() {
+    let json = pandoc_convert(include_str!("testsuite.txt"), "markdown", "json").unwrap();
+    let mut doc: Pandoc = serde_json::from_str(&json).unwrap();
+    make_blocks_uppercase(doc.blocks.iter_mut());
+    let json = serde_json::to_string(&doc).unwrap();
+    let markdown = pandoc_convert(&json, "json", "markdown").unwrap();
+    assert_eq!(markdown, include_str!("testsuite_uppercase.txt"));
+}
+
+#[test]
+fn iter_mut_tables() {
+    let json = pandoc_convert(include_str!("tables.txt"), "markdown", "json").unwrap();
+    let mut doc: Pandoc = serde_json::from_str(&json).unwrap();
+    make_blocks_uppercase(doc.blocks.iter_mut());
+    let json = serde_json::to_string(&doc).unwrap();
+    let markdown = pandoc_convert(&json, "json", "markdown").unwrap();
+    assert_eq!(markdown, include_str!("tables_uppercase.txt"));
 }
