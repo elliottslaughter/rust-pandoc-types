@@ -727,7 +727,10 @@ AUTO-LINKS SHOULD NOT OCCUR HERE: `<http://example.com/>`
 
 FROM "VOYAGE DANS LA LUNE" BY GEORGES MELIES (1902):
 
-![LALUNE](lalune.jpg "Voyage dans la Lune")
+<figure>
+<img src="lalune.jpg" title="Voyage dans la Lune" alt="LALUNE" />
+<figcaption>lalune</figcaption>
+</figure>
 
 HERE IS A MOVIE ![MOVIE](movie.jpg) ICON.
 
