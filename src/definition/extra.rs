@@ -46,6 +46,7 @@ pub enum BlockType {
     Header,
     HorizontalRule,
     Table,
+    Figure,
     Div,
     Null,
 }
@@ -65,6 +66,7 @@ impl From<&Block> for BlockType {
             Block::Header(_, _, _) => Self::Header,
             Block::HorizontalRule => Self::HorizontalRule,
             Block::Table(_) => Self::Table,
+            Block::Figure(_, _, _) => Self::Figure,
             Block::Div(_, _) => Self::Div,
             Block::Null => Self::Null,
         }

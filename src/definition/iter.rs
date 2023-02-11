@@ -31,6 +31,7 @@ impl<'a> IterBlocks<'a> for Block {
     fn iter_blocks(&'a self) -> Self::Iter {
         Box::new(match self {
             Block::BlockQuote(blocks) => IterTypes::Iter(blocks.iter()),
+            Block::Figure(_, _, blocks) => IterTypes::Iter(blocks.iter()),
             Block::Div(_, blocks) => IterTypes::Iter(blocks.iter()),
             Block::BulletList(items) => IterTypes::FlattenIter(items.iter().flatten()),
             Block::OrderedList(_, items) => IterTypes::FlattenIter(items.iter().flatten()),
@@ -55,6 +56,7 @@ impl<'a> IterBlocks<'a> for Block {
     fn iter_blocks_mut(&'a mut self) -> Self::IterMut {
         Box::new(match self {
             Block::BlockQuote(blocks) => IterTypes::Iter(blocks.iter_mut()),
+            Block::Figure(_, _, blocks) => IterTypes::Iter(blocks.iter_mut()),
             Block::Div(_, blocks) => IterTypes::Iter(blocks.iter_mut()),
             Block::BulletList(items) => IterTypes::FlattenIter(items.iter_mut().flatten()),
             Block::OrderedList(_, items) => IterTypes::FlattenIter(items.iter_mut().flatten()),
@@ -176,6 +178,7 @@ impl<'a> IterInlines<'a> for Block {
             Block::OrderedList(_, _) => IterTypes::Empty,
             Block::BulletList(_) => IterTypes::Empty,
             Block::HorizontalRule => IterTypes::Empty,
+            Block::Figure(_, _, _) => IterTypes::Empty,
             Block::Div(_, _) => IterTypes::Empty,
             Block::Null => IterTypes::Empty,
         })
@@ -200,6 +203,7 @@ impl<'a> IterInlines<'a> for Block {
             Block::OrderedList(_, _) => IterTypes::Empty,
             Block::BulletList(_) => IterTypes::Empty,
             Block::HorizontalRule => IterTypes::Empty,
+            Block::Figure(_, _, _) => IterTypes::Empty,
             Block::Div(_, _) => IterTypes::Empty,
             Block::Null => IterTypes::Empty,
         })

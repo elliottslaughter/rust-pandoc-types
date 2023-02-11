@@ -1,6 +1,6 @@
 [package]
 name = "pandoc_types"
-version = "0.5.0"
+version = "0.6.0"
 authors = ["Elliott Slaughter <elliottslaughter@gmail.com>"]
 license = "Apache-2.0"
 description = "Rust port of pandoc-types"

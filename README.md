@@ -7,7 +7,7 @@ To install, add the following to your `Cargo.toml`:
 
 ```
 [dependencies]
-pandoc_types = "0.5"
+pandoc_types = "0.6"
 ```
 
 ## What this library is for
@@ -29,7 +29,7 @@ itself. If that's what you're looking for, consider the
 ## Compatibility
 
 The current version is **compatible with Haskell pandoc-types
-1.22**. This is the most recent version at the time of writing.
+1.23**. This is the most recent version at the time of writing.
 
 ## Supported modules
 
