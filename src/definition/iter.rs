@@ -35,12 +35,9 @@ impl<'a> IterBlocks<'a> for Block {
             Block::Div(_, blocks) => IterTypes::Iter(blocks.iter()),
             Block::BulletList(items) => IterTypes::FlattenIter(items.iter().flatten()),
             Block::OrderedList(_, items) => IterTypes::FlattenIter(items.iter().flatten()),
-            Block::DefinitionList(definitions) => IterTypes::FlatMap(
-                definitions
-                    .iter()
-                    .map(|(_dt, dd)| dd.iter().flatten())
-                    .flatten(),
-            ),
+            Block::DefinitionList(definitions) => {
+                IterTypes::FlatMap(definitions.iter().flat_map(|(_dt, dd)| dd.iter().flatten()))
+            }
             Block::Table(table) => IterTypes::Table(table.iter_blocks()),
             Block::Plain(_) => IterTypes::Empty,
             Block::Para(_) => IterTypes::Empty,
@@ -63,8 +60,7 @@ impl<'a> IterBlocks<'a> for Block {
             Block::DefinitionList(definitions) => IterTypes::FlatMap(
                 definitions
                     .iter_mut()
-                    .map(|(_dt, dd)| dd.iter_mut().flatten())
-                    .flatten(),
+                    .flat_map(|(_dt, dd)| dd.iter_mut().flatten()),
             ),
             Block::Table(table) => IterTypes::Table(table.iter_blocks_mut()),
             Block::Plain(_) => IterTypes::Empty,
