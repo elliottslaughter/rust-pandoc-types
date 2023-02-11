@@ -31,6 +31,19 @@ itself. If that's what you're looking for, consider the
 The current version is **compatible with Haskell pandoc-types
 1.23**. This is the most recent version at the time of writing.
 
+If you require support for a previous version of pandoc-types, please
+refer to the following support table to determine which version to
+use:
+
+| Rust Version | pandoc-types Version | pandoc Versions |
+| ------------ | -------------------- | --------------- |
+| 0.6          | 1.23                 | 3.0--           |
+| 0.5          | 1.22                 | 2.11--2.19      |
+| 0.4          | 1.22                 | 2.11--2.19      |
+| 0.3          | 1.20                 | 2.8--2.9        |
+| 0.2          | 1.17                 | 1.18--2.7       |
+| 0.1          | 1.17                 | 1.18--2.7       |
+
 ## Supported modules
 
 The following modules from pandoc-types are supported:
