@@ -12,7 +12,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: 1.67.1
           override: true
 
       - name: Run cargo fmt
@@ -25,9 +25,10 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: clippy
+          args: -- -D warnings
 
       - name: Setup pandoc
-        uses: r-lib/actions/setup-pandoc@v1
+        uses: r-lib/actions/setup-pandoc@v2
         with:
           pandoc-version: 3.1
 
