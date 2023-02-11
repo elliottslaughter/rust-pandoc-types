@@ -11,7 +11,7 @@ use serde_tuple::{Deserialize_tuple, Serialize_tuple};
 pub mod extra;
 mod iter;
 
-const PANDOC_API_VERSION: [i32; 2] = [1, 22];
+const PANDOC_API_VERSION: [i32; 2] = [1, 23];
 
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct Pandoc {
@@ -103,6 +103,8 @@ pub enum Block {
     HorizontalRule,
     /// Table
     Table(Table),
+    /// Figure
+    Figure(Attr, Caption, Vec<Block>),
     /// Generic block container with attributes
     Div(Attr, Vec<Block>),
     /// Nothing
